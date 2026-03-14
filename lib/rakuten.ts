@@ -8,19 +8,21 @@ export async function fetchRakutenProducts(
   hits: number = ITEMS_PER_PAGE
 ): Promise<Product[]> {
   const appId = process.env.RAKUTEN_APP_ID;
+  const accessKey = process.env.RAKUTEN_ACCESS_KEY;
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  if (!appId || !affiliateId) {
+  if (!appId || !accessKey) {
     console.error('楽天API認証情報が設定されていません');
     return [];
   }
 
   const params = new URLSearchParams({
     applicationId: appId,
-    affiliateId: affiliateId,
+    accessKey: accessKey,
     hits: hits.toString(),
-    sort: '-itemPrice', // 価格が安い順
-    imageFlag: '1',
+    sort: 'standard',
+    format: 'json',
   });
 
   if (genreId) {
@@ -31,8 +33,17 @@ export async function fetchRakutenProducts(
     params.append('keyword', keyword);
   }
 
+  // keywordもgenreIdもない場合はタイムセールで検索
+  if (!genreId && !keyword) {
+    params.append('keyword', 'タイムセール');
+  }
+
   try {
     const response = await fetch(`${RAKUTEN_API_BASE_URL}?${params.toString()}`, {
+      headers: {
+        'Referer': siteUrl,
+        'Origin': siteUrl,
+      },
       next: { revalidate: 86400 }, // 24時間キャッシュ
     });
 
@@ -49,14 +60,15 @@ export async function fetchRakutenProducts(
     // データを変換
     return data.Items.map((item) => {
       const product = item.Item;
-      const imageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
+      const rawImageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
+      const imageUrl = rawImageUrl.replace('_ex=128x128', '_ex=400x400');
 
       return {
         id: product.itemCode,
         name: product.itemName,
         price: product.itemPrice,
         imageUrl,
-        affiliateUrl: product.affiliateUrl || product.itemUrl,
+        affiliateUrl: (affiliateId && product.affiliateUrl) || product.itemUrl,
         category: genreId || 'all',
         rating: product.reviewAverage,
         reviewCount: product.reviewCount,
