@@ -8,13 +8,6 @@ interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// 静的パス生成
-export async function generateStaticParams() {
-  return Object.keys(CATEGORIES).map((slug) => ({
-    slug,
-  }));
-}
-
 // ISR設定: 24時間ごとに再生成
 export const revalidate = 86400;
 
