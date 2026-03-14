@@ -47,12 +47,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <Script src="https://www.googletagmanager.com/gtag/js?id=G-V3YKS3ZM85" strategy="afterInteractive" />
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-NF79B5HLLB" strategy="afterInteractive" />
       <Script id="google-analytics" strategy="afterInteractive">{`
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-V3YKS3ZM85');
+        gtag('config', 'G-NF79B5HLLB');
       `}</Script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
