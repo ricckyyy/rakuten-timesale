@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import ProductGrid from '@/components/ProductGrid';
-import { CATEGORIES, REVALIDATE_TIME } from '@/lib/constants';
+import { CATEGORIES } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 interface CategoryPageProps {
@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 }
 
 // ISR設定: 24時間ごとに再生成
-export const revalidate = REVALIDATE_TIME;
+export const revalidate = 86400;
 
 // メタデータ生成
 export async function generateMetadata(

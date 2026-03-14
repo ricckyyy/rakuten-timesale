@@ -1,10 +1,10 @@
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import ProductGrid from '@/components/ProductGrid';
-import { CATEGORY_LIST, REVALIDATE_TIME } from '@/lib/constants';
+import { CATEGORY_LIST } from '@/lib/constants';
 import Link from 'next/link';
 
 // ISR設定: 24時間ごとに再生成
-export const revalidate = REVALIDATE_TIME;
+export const revalidate = 86400;
 
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）
