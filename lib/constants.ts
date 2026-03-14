@@ -23,13 +23,13 @@ export const CATEGORIES: Record<string, Category> = {
   beauty: {
     name: '美容・コスメ',
     slug: 'beauty',
-    genreId: '200162',
+    genreId: '100939',
     description: '美容・コスメのタイムセール情報'
   },
   books: {
     name: '本・CD・DVD',
     slug: 'books',
-    genreId: '001001',
+    genreId: '200162',
     description: '本・CD・DVDのタイムセール情報'
   }
 };
