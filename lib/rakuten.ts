@@ -23,6 +23,7 @@ export async function fetchRakutenProducts(
     hits: hits.toString(),
     sort: 'standard',
     format: 'json',
+    ...(affiliateId && { affiliateId }),
   });
 
   if (genreId) {
