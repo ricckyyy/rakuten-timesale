@@ -205,7 +205,10 @@ async function createPR(title, body, end) {
   const ref = await githubApi('/git/ref/heads/main', 'GET');
   const mainSha = ref.object.sha;
 
-  // ブランチ作成
+  // ブランチ作成（既存の場合は削除して再作成）
+  try {
+    await githubApi(`/git/refs/heads/${branch}`, 'DELETE', null);
+  } catch (e) { /* ブランチが存在しない場合は無視 */ }
   await githubApi('/git/refs', 'POST', {
     ref: `refs/heads/${branch}`,
     sha: mainSha,
