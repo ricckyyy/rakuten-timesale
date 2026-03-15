@@ -180,22 +180,54 @@ ${gscTopPages || '| データなし | - | - |'}
 `;
 }
 
-async function createGithubIssue(title, body) {
+async function githubApi(path, method, body) {
   const [owner, repo] = GITHUB_REPO.split('/');
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
-    method: 'POST',
+  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}${path}`, {
+    method,
     headers: {
       Authorization: `Bearer ${GITHUB_TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, body, labels: ['analytics'] }),
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`GitHub API失敗 ${path}: ${response.status} ${text}`);
+  }
+  return response.json();
+}
+
+async function createPR(title, body, end) {
+  const branch = `analytics/weekly-${end}`;
+  const filePath = `analytics/weekly-${end}.md`;
+
+  // mainのSHAを取得
+  const ref = await githubApi('/git/ref/heads/main', 'GET');
+  const mainSha = ref.object.sha;
+
+  // ブランチ作成
+  await githubApi('/git/refs', 'POST', {
+    ref: `refs/heads/${branch}`,
+    sha: mainSha,
   });
 
-  if (!response.ok) {
-    throw new Error(`GitHub Issue作成失敗: ${response.status}`);
-  }
-  const issue = await response.json();
-  console.log(`Issue作成完了: ${issue.html_url}`);
+  // ファイルをコミット
+  await githubApi(`/contents/${filePath}`, 'PUT', {
+    message: `analytics: 週次レポート ${end}`,
+    content: Buffer.from(body).toString('base64'),
+    branch,
+  });
+
+  // PR作成
+  const pr = await githubApi('/pulls', 'POST', {
+    title,
+    body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\nClaudeに「このPRを分析して改善提案して」と依頼してください。`,
+    head: branch,
+    base: 'main',
+    labels: ['analytics'],
+  });
+
+  console.log(`PR作成完了: ${pr.html_url}`);
 }
 
 async function main() {
@@ -211,10 +243,11 @@ async function main() {
   console.log('レポート生成中...');
   const report = formatReport(ga4, gsc, { start, end });
 
-  console.log('GitHub Issue作成中...');
-  await createGithubIssue(
+  console.log('GitHub PR作成中...');
+  await createPR(
     `📊 週次レポート ${end}`,
-    report
+    report,
+    end
   );
 }
 
