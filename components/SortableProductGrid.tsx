@@ -47,7 +47,7 @@ export default function SortableProductGrid({ products }: { products: Product[] 
             className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
               sortKey === key
                 ? 'bg-red-500 text-white border-red-500'
-                : 'bg-white text-gray-600 border-gray-300 hover:border-red-400'
+                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-red-400'
             }`}
           >
             {label}

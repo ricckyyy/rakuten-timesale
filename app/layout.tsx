@@ -58,7 +58,7 @@ export default function RootLayout({
         gtag('config', 'G-NF79B5HLLB');
       `}</Script>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col`}
       >
         <Header />
         <main className="flex-1 container mx-auto px-4 py-8">

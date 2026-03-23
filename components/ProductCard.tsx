@@ -17,9 +17,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       href={product.affiliateUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+      className="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
     >
-      <div className="relative aspect-square bg-gray-100">
+      <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
       <div className="p-4">
-        <h3 className="text-sm font-medium text-gray-800 mb-2 min-h-[40px]">
+        <h3 className="text-sm font-medium text-gray-800 dark:text-gray-100 mb-2 min-h-[40px]">
           {truncateTitle(product.name)}
         </h3>
         <div className="flex items-baseline justify-between">
@@ -56,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
         {product.rating && (
-          <div className="mt-2 flex items-center text-sm text-gray-600">
+          <div className="mt-2 flex items-center text-sm text-gray-600 dark:text-gray-400">
             <span className="text-yellow-500">★</span>
             <span className="ml-1">{product.rating.toFixed(1)}</span>
             {product.reviewCount && (
