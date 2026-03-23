@@ -64,10 +64,13 @@ export async function fetchRakutenProducts(
       const rawImageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
       const imageUrl = rawImageUrl.replace('_ex=128x128', '_ex=400x400');
 
+      const discount = parseDiscountFromName(product.itemName, product.itemPrice);
+
       return {
         id: product.itemCode,
         name: product.itemName,
         price: product.itemPrice,
+        discount,
         imageUrl,
         affiliateUrl: (affiliateId && product.affiliateUrl) || product.itemUrl,
         category: genreId || 'all',
@@ -92,4 +95,31 @@ export function formatPrice(price: number): string {
 // 割引率計算
 export function calculateDiscount(originalPrice: number, currentPrice: number): number {
   return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+}
+
+// 商品名から割引率を抽出
+export function parseDiscountFromName(name: string, currentPrice: number): number | undefined {
+  // パターン1: 「3990円→1990円」「3,990円→1,990円」
+  const pricePattern = /(\d[\d,]+)円[→⇒]+(\d[\d,]+)円/;
+  const priceMatch = name.match(pricePattern);
+  if (priceMatch) {
+    const original = parseInt(priceMatch[1].replace(/,/g, ''), 10);
+    const sale = parseInt(priceMatch[2].replace(/,/g, ''), 10);
+    if (original > sale && sale > 0) {
+      return Math.round(((original - sale) / original) * 100);
+    }
+  }
+
+  // パターン2: 「50%OFF」「50%off」「50%オフ」「50％OFF」
+  const percentPattern = /(\d+)[%％]\s*(?:off|OFF|オフ)/;
+  const percentMatch = name.match(percentPattern);
+  if (percentMatch) {
+    const rate = parseInt(percentMatch[1], 10);
+    if (rate > 0 && rate < 100) return rate;
+  }
+
+  // パターン3: 「半額」
+  if (/半額/.test(name)) return 50;
+
+  return undefined;
 }
