@@ -40,7 +40,7 @@ export const CATEGORY_LIST = Object.values(CATEGORIES);
 // サイト情報
 export const SITE_INFO = {
   title: '楽天タイムセール速報',
-  description: '楽天市場の最新タイムセール情報を毎日更新！お得な商品を見逃さないためのセール情報まとめサイト',
+  description: '楽天市場のタイムセール情報をリアルタイム更新。家電・食品・ファッションなど全ジャンルのお得商品を一覧表示。セール終了前にチェック！',
   url: 'https://rakuten-timesale.vercel.app', // デプロイ後に更新
   ogImage: '/og-image.png'
 };
