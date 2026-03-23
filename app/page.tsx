@@ -19,14 +19,14 @@ export default async function Home() {
   return (
     <div>
       {/* ヒーローセクション */}
-      <section className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+      <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-3">
           🔥 今日のタイムセール
         </h1>
-        <p className="text-gray-600 mb-1">
+        <p className="text-gray-600 dark:text-gray-400 mb-1">
           {today} 更新
         </p>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           楽天市場の最新セール情報をお届けします！お得な商品を見逃さないでチェック！
         </p>
       </section>
@@ -64,11 +64,11 @@ export default async function Home() {
       </section>
 
       {/* SEO用テキスト */}
-      <section className="mt-12 bg-white rounded-lg shadow-md p-6 md:p-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+      <section className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           楽天タイムセール速報について
         </h2>
-        <div className="prose max-w-none text-gray-700">
+        <div className="prose max-w-none text-gray-700 dark:text-gray-300">
           <p className="mb-3">
             楽天タイムセール速報は、楽天市場で開催されている最新のタイムセール情報を毎日更新してお届けするサイトです。
             家電、食品、ファッション、美容、本・CD・DVDなど、さまざまなカテゴリのお得な商品を見つけることができます。
