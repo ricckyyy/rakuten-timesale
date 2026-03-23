@@ -31,6 +31,12 @@ export const CATEGORIES: Record<string, Category> = {
     slug: 'books',
     genreId: '200162',
     description: '本・CD・DVDのタイムセール情報'
+  },
+  sports: {
+    name: 'スポーツ・アウトドア',
+    slug: 'sports',
+    genreId: '100526',
+    description: 'スポーツ・アウトドア用品のタイムセール情報'
   }
 };
 

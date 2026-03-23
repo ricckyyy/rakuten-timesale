@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { fetchRakutenProducts } from '@/lib/rakuten';
-import ProductGrid from '@/components/ProductGrid';
+import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORIES } from '@/lib/constants';
 import type { Metadata } from 'next';
 
@@ -58,6 +58,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {slug === 'fashion' && '👕'}
             {slug === 'beauty' && '💄'}
             {slug === 'books' && '📚'}
+          {slug === 'sports' && '🏃'}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
             {category.name}のセール
@@ -76,7 +77,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <h2 className="text-xl font-bold text-gray-800 mb-4">
           セール商品一覧
         </h2>
-        <ProductGrid products={products} />
+        <SortableProductGrid products={products} />
       </section>
 
       {/* カテゴリ説明 */}

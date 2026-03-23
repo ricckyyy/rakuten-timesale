@@ -63,7 +63,6 @@ export async function fetchRakutenProducts(
       const product = item.Item;
       const rawImageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
       const imageUrl = rawImageUrl.replace('_ex=128x128', '_ex=400x400');
-
       const discount = parseDiscountFromName(product.itemName, product.itemPrice);
 
       return {
@@ -77,7 +76,7 @@ export async function fetchRakutenProducts(
         rating: product.reviewAverage,
         reviewCount: product.reviewCount,
       };
-    });
+    }).filter((p) => p.reviewCount === undefined || p.reviewCount > 0);
   } catch (error) {
     console.error('楽天API取得エラー:', error);
     return [];

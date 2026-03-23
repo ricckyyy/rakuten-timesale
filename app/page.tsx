@@ -1,5 +1,5 @@
 import { fetchRakutenProducts } from '@/lib/rakuten';
-import ProductGrid from '@/components/ProductGrid';
+import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORY_LIST } from '@/lib/constants';
 import Link from 'next/link';
 
@@ -47,6 +47,7 @@ export default async function Home() {
                 {category.slug === 'fashion' && '👕'}
                 {category.slug === 'beauty' && '💄'}
                 {category.slug === 'books' && '📚'}
+                {category.slug === 'sports' && '🏃'}
               </div>
               <h3 className="font-bold text-gray-800">{category.name}</h3>
             </Link>
@@ -59,7 +60,7 @@ export default async function Home() {
         <h2 className="text-xl font-bold text-gray-800 mb-4">
           おすすめセール商品
         </h2>
-        <ProductGrid products={products} />
+        <SortableProductGrid products={products} />
       </section>
 
       {/* SEO用テキスト */}
