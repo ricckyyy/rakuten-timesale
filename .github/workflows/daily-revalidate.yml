@@ -1,0 +1,14 @@
+name: Daily Revalidate
+
+on:
+  schedule:
+    - cron: '0 21 * * *'  # 毎日 日本時間 06:00 (UTC 21:00)
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  revalidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revalidate pages
+        run: |
+          curl -f "${{ secrets.SITE_URL }}/api/revalidate?secret=${{ secrets.REVALIDATE_SECRET }}"
