@@ -2,19 +2,18 @@
 
 import { useEffect, useState } from 'react';
 
+const REVALIDATE_SECONDS = 3600; // 1時間
+
 function getSecondsUntilNextUpdate(): number {
   const now = new Date();
-  const next = new Date();
-  next.setHours(6, 0, 0, 0);
-  if (now >= next) next.setDate(next.getDate() + 1);
-  return Math.floor((next.getTime() - now.getTime()) / 1000);
+  const elapsed = (now.getMinutes() * 60 + now.getSeconds()) % REVALIDATE_SECONDS;
+  return REVALIDATE_SECONDS - elapsed;
 }
 
 function formatTime(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
+  const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
 export default function CountdownTimer() {

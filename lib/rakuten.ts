@@ -45,7 +45,7 @@ export async function fetchRakutenProducts(
         'Referer': siteUrl,
         'Origin': siteUrl,
       },
-      next: { revalidate: 86400 }, // 24時間キャッシュ
+      next: { revalidate: 3600 }, // 1時間キャッシュ
     });
 
     if (!response.ok) {

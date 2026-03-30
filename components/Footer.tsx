@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white mt-12">
@@ -12,18 +14,19 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-3">カテゴリ</h3>
             <ul className="text-sm space-y-1">
-              <li><a href="/category/electronics" className="text-gray-400 hover:text-white">家電</a></li>
-              <li><a href="/category/food" className="text-gray-400 hover:text-white">食品</a></li>
-              <li><a href="/category/fashion" className="text-gray-400 hover:text-white">ファッション</a></li>
-              <li><a href="/category/beauty" className="text-gray-400 hover:text-white">美容・コスメ</a></li>
-              <li><a href="/category/books" className="text-gray-400 hover:text-white">本・CD・DVD</a></li>
+              <li><Link href="/category/electronics" className="text-gray-400 hover:text-white">家電</Link></li>
+              <li><Link href="/category/food" className="text-gray-400 hover:text-white">食品</Link></li>
+              <li><Link href="/category/fashion" className="text-gray-400 hover:text-white">ファッション</Link></li>
+              <li><Link href="/category/beauty" className="text-gray-400 hover:text-white">美容・コスメ</Link></li>
+              <li><Link href="/category/books" className="text-gray-400 hover:text-white">本・CD・DVD</Link></li>
+              <li><Link href="/category/sports" className="text-gray-400 hover:text-white">スポーツ・アウトドア</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="text-lg font-bold mb-3">リンク</h3>
             <ul className="text-sm space-y-1">
-              <li><a href="/privacy" className="text-gray-400 hover:text-white">プライバシーポリシー</a></li>
-              <li><a href="/terms" className="text-gray-400 hover:text-white">利用規約</a></li>
+              <li><Link href="/privacy" className="text-gray-400 hover:text-white">プライバシーポリシー</Link></li>
+              <li><Link href="/terms" className="text-gray-400 hover:text-white">利用規約</Link></li>
             </ul>
           </div>
         </div>

@@ -1,10 +1,10 @@
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
-import { CATEGORY_LIST } from '@/lib/constants';
+import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
 import Link from 'next/link';
 
-// ISR設定: 24時間ごとに再生成
-export const revalidate = 86400;
+// ISR設定: 1時間ごとに再生成
+export const revalidate = 3600;
 
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）
@@ -16,8 +16,25 @@ export default async function Home() {
     day: 'numeric',
   });
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_INFO.title,
+    description: SITE_INFO.description,
+    url: SITE_INFO.url,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_INFO.url}/category/{search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ヒーローセクション */}
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-3">

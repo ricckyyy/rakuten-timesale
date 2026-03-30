@@ -50,13 +50,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <Script src="https://www.googletagmanager.com/gtag/js?id=G-NF79B5HLLB" strategy="afterInteractive" />
-      <Script id="google-analytics" strategy="afterInteractive">{`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-NF79B5HLLB');
-      `}</Script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col`}
       >
@@ -65,6 +58,13 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-NF79B5HLLB" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-NF79B5HLLB');
+        `}</Script>
       </body>
     </html>
   );
