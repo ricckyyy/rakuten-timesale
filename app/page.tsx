@@ -22,11 +22,6 @@ export default async function Home() {
     name: SITE_INFO.title,
     description: SITE_INFO.description,
     url: SITE_INFO.url,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_INFO.url}/category/{search_term_string}`,
-      'query-input': 'required name=search_term_string',
-    },
   };
 
   return (

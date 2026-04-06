@@ -29,7 +29,7 @@ export default function Header() {
           <button
             className="md:hidden p-2 rounded hover:bg-white/20 transition"
             onClick={() => setMenuOpen((v) => !v)}
-            aria-label="メニューを開く"
+            aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
           >
             {menuOpen ? (
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

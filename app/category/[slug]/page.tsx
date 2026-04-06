@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
-import { CATEGORIES } from '@/lib/constants';
+import { CATEGORIES, SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 interface CategoryPageProps {
@@ -28,17 +28,16 @@ export async function generateMetadata(
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakuten-timesale.vercel.app';
   return {
     title: `${category.name}のタイムセール・特価品`,
     description: category.description,
     alternates: {
-      canonical: `${siteUrl}/category/${slug}`,
+      canonical: `${SITE_INFO.url}/category/${slug}`,
     },
     openGraph: {
       title: `${category.name}のタイムセール・特価品 | 楽天タイムセール速報`,
       description: category.description,
-      url: `${siteUrl}/category/${slug}`,
+      url: `${SITE_INFO.url}/category/${slug}`,
     },
   };
 }
@@ -60,18 +59,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     day: 'numeric',
   });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakuten-timesale.vercel.app';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${category.name}のタイムセール・特価品`,
     description: category.description,
-    url: `${siteUrl}/category/${slug}`,
+    url: `${SITE_INFO.url}/category/${slug}`,
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'ホーム', item: siteUrl },
-        { '@type': 'ListItem', position: 2, name: category.name, item: `${siteUrl}/category/${slug}` },
+        { '@type': 'ListItem', position: 1, name: 'ホーム', item: SITE_INFO.url },
+        { '@type': 'ListItem', position: 2, name: category.name, item: `${SITE_INFO.url}/category/${slug}` },
       ],
     },
   };
