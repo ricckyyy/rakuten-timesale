@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const REVALIDATE_SECONDS = 3600; // 1時間
+import { REVALIDATE_TIME } from '@/lib/constants';
 
 function getSecondsUntilNextUpdate(): number {
   const now = new Date();
-  const elapsed = (now.getMinutes() * 60 + now.getSeconds()) % REVALIDATE_SECONDS;
-  return REVALIDATE_SECONDS - elapsed;
+  const elapsed = (now.getMinutes() * 60 + now.getSeconds()) % REVALIDATE_TIME;
+  return REVALIDATE_TIME - elapsed;
 }
 
 function formatTime(seconds: number): string {
