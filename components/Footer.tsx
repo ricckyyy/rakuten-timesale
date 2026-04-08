@@ -25,6 +25,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-3">リンク</h3>
             <ul className="text-sm space-y-1">
+              <li><Link href="/blog" className="text-gray-400 hover:text-white">ブログ・お買い物ガイド</Link></li>
               <li><Link href="/privacy" className="text-gray-400 hover:text-white">プライバシーポリシー</Link></li>
               <li><Link href="/terms" className="text-gray-400 hover:text-white">利用規約</Link></li>
             </ul>

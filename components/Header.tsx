@@ -23,6 +23,7 @@ export default function Header() {
                 {category.name}
               </Link>
             ))}
+            <Link href="/blog" className="hover:underline">ブログ</Link>
           </nav>
 
           {/* ハンバーガーボタン（モバイルのみ） */}
@@ -59,6 +60,9 @@ export default function Header() {
                 {category.name}
               </Link>
             ))}
+            <Link href="/blog" className="hover:underline" onClick={() => setMenuOpen(false)}>
+              ブログ
+            </Link>
           </nav>
         )}
       </div>
