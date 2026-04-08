@@ -15,11 +15,11 @@ export interface BlogPost {
 }
 
 export function getAllPosts(): BlogPost[] {
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.md'));
+  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.mdx'));
 
   return files
     .map((filename) => {
-      const slug = filename.replace(/\.md$/, '');
+      const slug = filename.replace(/\.mdx$/, '');
       const raw = fs.readFileSync(path.join(BLOG_DIR, filename), 'utf-8');
       const { data, content } = matter(raw);
 
@@ -37,7 +37,7 @@ export function getAllPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(BLOG_DIR, `${slug}.md`);
+  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
 
   const raw = fs.readFileSync(filePath, 'utf-8');
