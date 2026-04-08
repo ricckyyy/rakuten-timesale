@@ -8,6 +8,8 @@ import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
