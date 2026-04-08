@@ -39,14 +39,20 @@ export async function fetchRakutenProducts(
     params.append('keyword', 'タイムセール');
   }
 
+  const url = `${RAKUTEN_API_BASE_URL}?${params.toString()}`;
+  const fetchOptions = {
+    headers: { 'Referer': siteUrl, 'Origin': siteUrl },
+    next: { revalidate: 3600 },
+  };
+
   try {
-    const response = await fetch(`${RAKUTEN_API_BASE_URL}?${params.toString()}`, {
-      headers: {
-        'Referer': siteUrl,
-        'Origin': siteUrl,
-      },
-      next: { revalidate: 3600 }, // 1時間キャッシュ
-    });
+    let response = await fetch(url, fetchOptions);
+
+    // 429の場合は1秒待ってリトライ
+    if (response.status === 429) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      response = await fetch(url, fetchOptions);
+    }
 
     if (!response.ok) {
       throw new Error(`楽天API エラー: ${response.status}`);
