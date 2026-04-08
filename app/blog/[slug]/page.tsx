@@ -4,6 +4,7 @@ import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import ProductCard from '@/components/ProductCard';
+import ProductSection from '@/components/ProductSection';
 import type { Metadata } from 'next';
 
 interface BlogPostPageProps {
@@ -74,7 +75,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:mb-1
           prose-strong:text-gray-900 dark:prose-strong:text-gray-100
         ">
-          <MDXRemote source={post.content} />
+          <MDXRemote source={post.content} components={{ ProductSection }} />
         </div>
       </article>
 
