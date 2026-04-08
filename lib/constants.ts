@@ -12,7 +12,7 @@ export const CATEGORIES: Record<string, Category> = {
     name: '食品',
     slug: 'food',
     genreId: '100227',
-    description: '食品・グルメ・お酒のタイムセールをまとめて掲載。食品保存グッズ・調味料・お菓子・飲料など、日用食材からグルメギフトまでセール価格でお得にGET！'
+    description: '食品保存グッズ・食品のセール情報をまとめて掲載。食品保存容器・調味料・お菓子・飲料・グルメギフトなど、楽天市場の食品タイムセールをセール価格でお得にGET！'
   },
   fashion: {
     name: 'ファッション',

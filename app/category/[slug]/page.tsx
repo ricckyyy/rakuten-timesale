@@ -117,10 +117,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           {category.name}カテゴリについて
         </h2>
         <div className="prose max-w-none text-gray-700 dark:text-gray-300">
-          <p>
-            {category.name}カテゴリでは、楽天市場で開催されている{category.name}関連のタイムセール商品を掲載しています。
-            毎日更新される最新のセール情報をチェックして、お得な商品を見逃さないようにしましょう。
-          </p>
+          <p>{category.description}</p>
         </div>
       </section>
     </div>
