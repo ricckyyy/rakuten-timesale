@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
@@ -24,4 +23,98 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ブログ記事本文スタイル */
+.blog-content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.blog-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.blog-content p {
+  color: #374151;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.blog-content strong {
+  color: #111827;
+  font-weight: 700;
+}
+.blog-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.blog-content li {
+  color: #374151;
+  margin-bottom: 0.25rem;
+  line-height: 1.7;
+}
+.blog-content a {
+  color: #dc2626;
+  text-decoration: underline;
+}
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+.blog-content th {
+  background: #f3f4f6;
+  font-weight: 700;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  text-align: left;
+}
+.blog-content td {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+.blog-content tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .blog-content h2 {
+    color: #f3f4f6;
+    border-bottom-color: #374151;
+  }
+  .blog-content h3 {
+    color: #f3f4f6;
+  }
+  .blog-content p,
+  .blog-content li,
+  .blog-content td {
+    color: #d1d5db;
+  }
+  .blog-content strong {
+    color: #f9fafb;
+  }
+  .blog-content a {
+    color: #f87171;
+  }
+  .blog-content th {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+  .blog-content td {
+    border-color: #4b5563;
+  }
+  .blog-content tr:nth-child(even) td {
+    background: #1f2937;
+  }
 }

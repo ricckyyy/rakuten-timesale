@@ -64,17 +64,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </time>
         </header>
 
-        <div className="
-          prose prose-gray dark:prose-invert max-w-none
-          prose-headings:font-bold
-          prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:border-b prose-h2:border-gray-200 dark:prose-h2:border-gray-700 prose-h2:pb-2
-          prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3
-          prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4
-          prose-a:text-red-600 dark:prose-a:text-red-400 prose-a:underline
-          prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-4
-          prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:mb-1
-          prose-strong:text-gray-900 dark:prose-strong:text-gray-100
-        ">
+        <div className="blog-content">
           <MDXRemote source={post.content} components={{ ProductSection }} />
         </div>
       </article>
