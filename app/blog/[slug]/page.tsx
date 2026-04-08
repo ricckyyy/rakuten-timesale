@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
 import type { Metadata } from 'next';
@@ -65,7 +66,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </header>
 
         <div className="blog-content">
-          <MDXRemote source={post.content} components={{ ProductSection }} />
+          <MDXRemote source={post.content} components={{ ProductSection }} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
       </article>
 
