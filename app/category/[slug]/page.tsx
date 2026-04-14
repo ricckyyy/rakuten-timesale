@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
+import { getAllPosts } from '@/lib/blog';
 import { CATEGORIES, SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
 
@@ -28,14 +30,18 @@ export async function generateMetadata(
     };
   }
 
+  const today = new Date().toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
+  const ogTitle = `【${today}更新】楽天タイムセール ${category.name} 最大50%OFF`;
+  const titleStr = `${category.name}タイムセール・セール特価品【${today}更新】`;
+
   return {
-    title: `${category.name}のタイムセール・特価品`,
+    title: titleStr,
     description: category.description,
     alternates: {
       canonical: `${SITE_INFO.url}/category/${slug}`,
     },
     openGraph: {
-      title: `${category.name}のタイムセール・特価品 | 楽天タイムセール速報`,
+      title: ogTitle,
       description: category.description,
       url: `${SITE_INFO.url}/category/${slug}`,
     },
@@ -52,6 +58,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // カテゴリIDで商品を取得
   const products = await fetchRakutenProducts(category.genreId);
+
+  // このカテゴリに関連するブログ記事を取得
+  const relatedPosts = getAllPosts().filter((p) => p.category === slug);
 
   const today = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
@@ -120,6 +129,29 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <p>{category.description}</p>
         </div>
       </section>
+
+      {/* 関連ブログ記事 */}
+      {relatedPosts.length > 0 && (
+        <section className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+            📝 {category.name}の買い物ガイド
+          </h2>
+          <div className="grid gap-4">
+            {relatedPosts.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-red-400 dark:hover:border-red-500 hover:shadow-md transition-all"
+              >
+                <p className="font-semibold text-gray-800 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 mb-1">
+                  {post.title}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{post.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
