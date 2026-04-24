@@ -12,11 +12,39 @@ function truncateTitle(name: string, maxLength = 40): string {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const handleClick = () => {
+    if (typeof window === 'undefined') return;
+    const w = window as any;
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+    };
+
+    try {
+      if (typeof w.gtag === 'function') {
+        w.gtag('event', 'select_item', {
+          items: [item],
+          value: product.price,
+          currency: 'JPY',
+        });
+      } else if (Array.isArray(w.dataLayer) || typeof w.dataLayer?.push === 'function') {
+        w.dataLayer.push({
+          event: 'select_item',
+          items: [item],
+        });
+      }
+    } catch (e) {
+      // fail silently
+    }
+  };
+
   return (
     <a
       href={product.affiliateUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
     >
       <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
