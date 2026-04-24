@@ -43,6 +43,14 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_INFO.title,
+  url: SITE_INFO.url,
+  description: SITE_INFO.description,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,6 +61,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <Header />
         <main className="flex-1 container mx-auto px-4 py-8">
           {children}
