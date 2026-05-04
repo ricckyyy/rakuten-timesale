@@ -84,13 +84,13 @@ export default async function Home() {
       {/* ヒーローセクション */}
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-3">
-          🔥 今日のタイムセール
+          🔥 楽天タイムセール 最新情報
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mb-1">
           {today} 更新
         </p>
         <p className="text-gray-600 dark:text-gray-400">
-          楽天市場の最新セール情報をお届けします！お得な商品を見逃さないでチェック！
+          楽天市場のタイムセール・特価品情報を毎日更新！美容・食品・家電など全カテゴリのお得商品をまとめてチェック。
         </p>
       </section>
 
