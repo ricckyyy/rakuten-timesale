@@ -2,13 +2,14 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPosts, getPostBySlug } from '@/lib/blog';
 import { fetchRakutenProducts } from '@/lib/rakuten';
+import { SITE_INFO } from '@/lib/constants';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -39,8 +40,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const keyword = post.tags[0] ?? post.title;
   const relatedProducts = await fetchRakutenProducts(undefined, keyword, 4);
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: { '@type': 'Organization', name: SITE_INFO.title, url: SITE_INFO.url },
+    publisher: { '@type': 'Organization', name: SITE_INFO.title, url: SITE_INFO.url },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_INFO.url}/blog/${slug}` },
+    keywords: post.tags.join(', '),
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: SITE_INFO.url },
+      { '@type': 'ListItem', position: 2, name: 'ブログ', item: `${SITE_INFO.url}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_INFO.url}/blog/${slug}` },
+    ],
+  };
+
   return (
     <div className="max-w-3xl mx-auto">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {/* パンくず */}
       <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
         <Link href="/" className="hover:underline">ホーム</Link>

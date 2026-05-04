@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}/blog`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: 0.7,
+    priority: 0.8,
   });
 
   // ブログ記事ページ
@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.date),
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.75,
     });
   });
 
