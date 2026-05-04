@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
 import { getAllPosts } from '@/lib/blog';
-import { CATEGORIES, SITE_INFO } from '@/lib/constants';
+import { CATEGORIES, CATEGORY_FAQ, SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 interface CategoryPageProps {
@@ -31,8 +31,8 @@ export async function generateMetadata(
   }
 
   const today = new Date().toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
-  const ogTitle = `【${today}更新】楽天タイムセール ${category.name} 最大50%OFF`;
-  const titleStr = `${category.name}タイムセール・セール特価品【${today}更新】`;
+  const ogTitle = `【${today}更新】楽天 ${category.name} タイムセール・特価品`;
+  const titleStr = `楽天 ${category.name} タイムセール【${today}更新】最安値・セール情報`;
 
   return {
     title: titleStr,
@@ -101,7 +101,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {slug === 'sports' && '🏃'}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100">
-            {category.name}のセール
+            楽天 {category.name} タイムセール
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-400 mb-1">
@@ -123,12 +123,33 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* カテゴリ説明 */}
       <section className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-          {category.name}カテゴリについて
+          楽天 {category.name} セールとは
         </h2>
-        <div className="prose max-w-none text-gray-700 dark:text-gray-300">
+        <div className="prose max-w-none text-gray-700 dark:text-gray-300 space-y-3">
           <p>{category.description}</p>
+          <p>
+            楽天市場の{category.name}セールは毎日開催されており、タイムセール・スーパーSALE・お買い物マラソンなどのイベントと組み合わせることで、さらにお得にお買い物できます。
+            楽天ポイントが貯まる・使えるため、ポイント還元率が高いSPU達成時にまとめ買いするのがおすすめです。
+          </p>
         </div>
       </section>
+
+      {/* カテゴリ別FAQ */}
+      {CATEGORY_FAQ[slug] && (
+        <section className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+            {category.name}セールよくある質問
+          </h2>
+          <div className="space-y-5">
+            {CATEGORY_FAQ[slug].map(({ q, a }) => (
+              <div key={q} className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-0 last:pb-0">
+                <p className="font-bold text-gray-800 dark:text-gray-100 mb-2">Q. {q}</p>
+                <p className="text-gray-600 dark:text-gray-400">A. {a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 関連ブログ記事 */}
       {relatedPosts.length > 0 && (
