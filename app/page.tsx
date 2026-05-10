@@ -1,6 +1,7 @@
 import { fetchRakutenProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
+import { getAllPosts } from '@/lib/blog';
 import Link from 'next/link';
 
 // ISR設定: 1時間ごとに再生成
@@ -9,6 +10,7 @@ export const revalidate = 3600;
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）
   const products = await fetchRakutenProducts(undefined, 'セール', 30);
+  const recentPosts = getAllPosts().slice(0, 3);
 
   const today = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
@@ -125,6 +127,40 @@ export default async function Home() {
         </h2>
         <SortableProductGrid products={products} />
       </section>
+
+      {/* ブログ・お買い物ガイド */}
+      {recentPosts.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">お買い物ガイド</h2>
+            <Link href="/blog" className="text-sm text-red-600 dark:text-red-400 hover:underline">
+              すべて見る →
+            </Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {recentPosts.map((post) => (
+              <article key={post.slug} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 hover:shadow-lg transition-shadow flex flex-col">
+                <Link href={`/blog/${post.slug}`}>
+                  <h3 className="font-bold text-gray-800 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 mb-2 line-clamp-2">
+                    {post.title}
+                  </h3>
+                </Link>
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">{post.description}</p>
+                <div className="mt-auto flex items-center justify-between gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </time>
+                  {post.tags[0] && (
+                    <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-0.5 rounded">
+                      {post.tags[0]}
+                    </span>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* SEO用テキスト */}
       <section className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
