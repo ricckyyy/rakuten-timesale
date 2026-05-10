@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/rakuten';

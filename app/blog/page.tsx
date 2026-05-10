@@ -1,17 +1,71 @@
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/blog';
+import { SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
+
+const blogUrl = `${SITE_INFO.url}/blog`;
 
 export const metadata: Metadata = {
   title: 'ブログ・お買い物ガイド',
   description: '楽天市場でお得に買い物するためのガイド記事。食品保存・家電・美容など各カテゴリのおすすめ商品をレビューします。',
+  alternates: { canonical: blogUrl },
+  openGraph: {
+    type: 'website',
+    url: blogUrl,
+    title: 'ブログ・お買い物ガイド',
+    description: '楽天市場でお得に買い物するためのガイド記事。食品保存・家電・美容など各カテゴリのおすすめ商品をレビューします。',
+    siteName: SITE_INFO.title,
+    locale: 'ja_JP',
+    images: [{ url: `${SITE_INFO.url}${SITE_INFO.ogImage}` }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ブログ・お買い物ガイド',
+    description: '楽天市場でお得に買い物するためのガイド記事。',
+    images: [`${SITE_INFO.url}${SITE_INFO.ogImage}`],
+  },
 };
 
 export default function BlogPage() {
   const posts = getAllPosts();
 
+  const blogJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${SITE_INFO.title} ブログ`,
+    url: blogUrl,
+    description: 'お買い物ガイド・セール攻略記事',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_INFO.title,
+      url: SITE_INFO.url,
+    },
+    blogPost: posts.map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.description,
+      url: `${SITE_INFO.url}/blog/${post.slug}`,
+      datePublished: post.date,
+      dateModified: post.updated ?? post.date,
+      keywords: post.tags.join(', '),
+    })),
+  };
+
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: posts.map((post, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      url: `${SITE_INFO.url}/blog/${post.slug}`,
+      name: post.title,
+    })),
+  };
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
           ブログ・お買い物ガイド
