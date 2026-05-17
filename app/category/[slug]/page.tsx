@@ -37,6 +37,7 @@ export async function generateMetadata(
   return {
     title: titleStr,
     description: category.description,
+    keywords: category.keywords,
     alternates: {
       canonical: `${SITE_INFO.url}/category/${slug}`,
     },
@@ -83,12 +84,31 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     },
   };
 
+  const faqItems = CATEGORY_FAQ[slug];
+  const faqJsonLd = faqItems
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }
+    : null;
+
   return (
     <div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       {/* カテゴリヘッダー */}
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
         <div className="flex items-center mb-3">

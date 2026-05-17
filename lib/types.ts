@@ -18,6 +18,7 @@ export interface Category {
   slug: string;
   genreId: string;
   description?: string;
+  keywords?: string[];
 }
 
 // 楽天APIレスポンス型
