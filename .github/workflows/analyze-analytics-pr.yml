@@ -10,6 +10,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       pull-requests: write
 
     steps:
@@ -24,10 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm install @anthropic-ai/sdk
 
-      - name: Analyze and post comment
+      - name: Analyze, improve, and merge
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BRANCH: ${{ github.head_ref }}
         run: node .github/scripts/analyze-analytics.js
