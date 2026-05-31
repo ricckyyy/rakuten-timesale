@@ -1,4 +1,5 @@
 const { google } = require('googleapis');
+const fs = require('fs');
 
 const SA_KEY = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
 const GA4_PROPERTY_ID = process.env.GA4_PROPERTY_ID;
@@ -227,10 +228,17 @@ async function createPR(title, body, end) {
     body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\nClaudeに「このPRを分析して改善提案して」と依頼してください。`,
     head: branch,
     base: 'main',
-    labels: ['analytics'],
   });
 
+  // ラベルは PR 作成 API では設定されないため issues API で付与する
+  try {
+    await githubApi(`/issues/${pr.number}/labels`, 'POST', { labels: ['analytics'] });
+  } catch (e) {
+    console.warn('ラベル付与に失敗しました（処理は続行）:', e.message);
+  }
+
   console.log(`PR作成完了: ${pr.html_url}`);
+  return { prNumber: pr.number, branch };
 }
 
 async function main() {
@@ -246,12 +254,23 @@ async function main() {
   console.log('レポート生成中...');
   const report = formatReport(ga4, gsc, { start, end });
 
+  // 後続の分析ステップがローカルから最新レポートを読めるよう書き出す
+  fs.writeFileSync(`analytics/weekly-${end}.md`, report);
+
   console.log('GitHub PR作成中...');
-  await createPR(
+  const { prNumber, branch } = await createPR(
     `📊 週次レポート ${end}`,
     report,
     end
   );
+
+  // 後続ステップ（分析→改善→マージ）へ PR 情報を引き渡す
+  if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(
+      process.env.GITHUB_OUTPUT,
+      `pr_number=${prNumber}\npr_branch=${branch}\n`
+    );
+  }
 }
 
 main().catch(err => {
