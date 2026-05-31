@@ -1,13 +1,17 @@
 name: Analyze Analytics PR
 
+# 本流の「取得→分析→改善→マージ」は weekly-analytics.yml が同一ジョブ内で実行する。
+# このワークフローは、人が手動で analytics/** ブランチの PR を開いた場合のフォールバック。
+# 注意: pull_request の branches フィルタは base ブランチに対して評価されるため、
+#       head ブランチ（analytics/**）の判定は job 側の if で行う。
+#       また GITHUB_TOKEN で作成された PR はこのイベントを発火しない。
 on:
   pull_request:
     types: [opened]
-    branches:
-      - 'analytics/**'
 
 jobs:
   analyze:
+    if: startsWith(github.head_ref, 'analytics/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

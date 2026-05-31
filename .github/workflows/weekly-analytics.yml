@@ -22,9 +22,10 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install googleapis
+        run: npm install googleapis @anthropic-ai/sdk
 
-      - name: Fetch analytics and create issue
+      - name: Fetch analytics and create PR
+        id: fetch
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
@@ -32,3 +33,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node .github/scripts/fetch-analytics.js
+
+      # GITHUB_TOKEN で作成した PR は pull_request イベントを発火しないため、
+      # 別ワークフローに依存せず同一ジョブ内で 分析→改善→マージ まで完結させる
+      - name: Analyze, improve, and merge
+        if: steps.fetch.outputs.pr_number != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.fetch.outputs.pr_number }}
+          PR_BRANCH: ${{ steps.fetch.outputs.pr_branch }}
+        run: node .github/scripts/analyze-analytics.js
