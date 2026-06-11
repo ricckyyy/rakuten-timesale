@@ -31,12 +31,14 @@ export async function generateMetadata(
   }
 
   const today = new Date().toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
-  const ogTitle = `【${today}更新】楽天 ${category.name} タイムセール・特価品`;
-  const titleStr = `楽天 ${category.name} タイムセール【${today}更新】最安値・セール情報`;
+  const displayName = category.seoName ?? category.name;
+  const ogTitle = `【${today}更新】楽天 ${displayName} タイムセール・特価品`;
+  const titleStr = `楽天 ${displayName} タイムセール【${today}更新】最安値・セール情報`;
 
   return {
     title: titleStr,
     description: category.description,
+    keywords: category.keywords,
     alternates: {
       canonical: `${SITE_INFO.url}/category/${slug}`,
     },
@@ -68,10 +70,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     day: 'numeric',
   });
 
+  const displayName = category.seoName ?? category.name;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${category.name}のタイムセール・特価品`,
+    name: `${displayName}のタイムセール・特価品`,
     description: category.description,
     url: `${SITE_INFO.url}/category/${slug}`,
     breadcrumb: {
@@ -81,7 +85,31 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         { '@type': 'ListItem', position: 2, name: category.name, item: `${SITE_INFO.url}/category/${slug}` },
       ],
     },
+    ...(products.length > 0 && {
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: products.length,
+        itemListElement: products.slice(0, 10).map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: product.name,
+          url: product.affiliateUrl,
+        })),
+      },
+    }),
   };
+
+  const faqJsonLd = CATEGORY_FAQ[slug]
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: CATEGORY_FAQ[slug].map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }
+    : null;
 
   return (
     <div>
@@ -89,6 +117,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       {/* カテゴリヘッダー */}
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8 mb-8">
         <div className="flex items-center mb-3">
@@ -101,7 +135,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {slug === 'sports' && '🏃'}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100">
-            楽天 {category.name} タイムセール
+            楽天 {displayName} タイムセール
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-400 mb-1">
@@ -123,7 +157,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* カテゴリ説明 */}
       <section className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-          楽天 {category.name} セールとは
+          楽天 {displayName} セールとは
         </h2>
         <div className="prose max-w-none text-gray-700 dark:text-gray-300 space-y-3">
           <p>{category.description}</p>
@@ -138,7 +172,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {CATEGORY_FAQ[slug] && (
         <section className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-            {category.name}セールよくある質問
+            {displayName}セールよくある質問
           </h2>
           <div className="space-y-5">
             {CATEGORY_FAQ[slug].map(({ q, a }) => (

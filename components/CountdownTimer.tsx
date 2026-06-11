@@ -19,6 +19,8 @@ export default function CountdownTimer() {
   const [seconds, setSeconds] = useState<number | null>(null);
 
   useEffect(() => {
+    // SSRとのハイドレーション不一致を避けるため、マウント後に初期値を設定する
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSeconds(getSecondsUntilNextUpdate());
     const timer = setInterval(() => {
       setSeconds(getSecondsUntilNextUpdate());
