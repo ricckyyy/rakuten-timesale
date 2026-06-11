@@ -18,6 +18,10 @@ export interface Category {
   slug: string;
   genreId: string;
   description?: string;
+  /** 検索クエリに合わせたSEO用表示名（タイトル・H1で使用。未指定時はnameを使用） */
+  seoName?: string;
+  /** メタデータkeywordsに出力する検索キーワード */
+  keywords?: string[];
 }
 
 // 楽天APIレスポンス型

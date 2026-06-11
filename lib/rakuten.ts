@@ -69,7 +69,7 @@ export async function fetchRakutenProducts(
       const product = item.Item;
       const rawImageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
       const imageUrl = rawImageUrl.replace('_ex=128x128', '_ex=400x400');
-      const discount = parseDiscountFromName(product.itemName, product.itemPrice);
+      const discount = parseDiscountFromName(product.itemName);
 
       return {
         id: product.itemCode,
@@ -103,7 +103,7 @@ export function calculateDiscount(originalPrice: number, currentPrice: number): 
 }
 
 // 商品名から割引率を抽出
-export function parseDiscountFromName(name: string, currentPrice: number): number | undefined {
+export function parseDiscountFromName(name: string): number | undefined {
   // パターン1: 「3990円→1990円」「3,990円→1,990円」
   const pricePattern = /(\d[\d,]+)円[→⇒]+(\d[\d,]+)円/;
   const priceMatch = name.match(pricePattern);

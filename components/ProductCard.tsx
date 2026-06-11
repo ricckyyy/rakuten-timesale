@@ -16,7 +16,10 @@ function truncateTitle(name: string, maxLength = 40): string {
 export default function ProductCard({ product }: ProductCardProps) {
   const handleClick = () => {
     if (typeof window === 'undefined') return;
-    const w = window as any;
+    const w = window as Window & {
+      gtag?: (...args: unknown[]) => void;
+      dataLayer?: { push: (data: Record<string, unknown>) => void };
+    };
     const item = {
       id: product.id,
       name: product.name,
@@ -36,7 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           items: [item],
         });
       }
-    } catch (e) {
+    } catch {
       // fail silently
     }
   };
