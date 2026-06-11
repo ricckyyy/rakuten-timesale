@@ -105,40 +105,23 @@ async function fetchGSCData(authClient) {
 function formatReport(ga4, gsc, dateRange) {
   const { start, end } = dateRange;
 
-  // GA4
-  const ga4Overview = ga4.overview.data.rows?.[0]?.metricValues || [];
-  const sessions = ga4Overview[0]?.value || '0';
-  const users = ga4Overview[1]?.value || '0';
-  const pageviews = ga4Overview[2]?.value || '0';
+  // GA4（取得失敗時は ga4 = null）
+  let ga4Section;
+  if (ga4) {
+    const ga4Overview = ga4.overview.data.rows?.[0]?.metricValues || [];
+    const sessions = ga4Overview[0]?.value || '0';
+    const users = ga4Overview[1]?.value || '0';
+    const pageviews = ga4Overview[2]?.value || '0';
 
-  const topPages = (ga4.topPages.data.rows || [])
-    .map(r => `| ${r.dimensionValues[0].value} | ${r.metricValues[0].value} |`)
-    .join('\n');
+    const topPages = (ga4.topPages.data.rows || [])
+      .map(r => `| ${r.dimensionValues[0].value} | ${r.metricValues[0].value} |`)
+      .join('\n');
 
-  const sources = (ga4.sources.data.rows || [])
-    .map(r => `| ${r.dimensionValues[0].value} | ${r.metricValues[0].value} |`)
-    .join('\n');
+    const sources = (ga4.sources.data.rows || [])
+      .map(r => `| ${r.dimensionValues[0].value} | ${r.metricValues[0].value} |`)
+      .join('\n');
 
-  // GSC
-  const gscOverview = gsc.overview.data.rows?.[0] || {};
-  const clicks = gscOverview.clicks || 0;
-  const impressions = gscOverview.impressions || 0;
-  const ctr = gscOverview.ctr ? (gscOverview.ctr * 100).toFixed(1) + '%' : '0%';
-  const position = gscOverview.position ? gscOverview.position.toFixed(1) : '-';
-
-  const topQueries = (gsc.topQueries.data.rows || [])
-    .map(r => `| ${r.keys[0]} | ${r.clicks} | ${r.impressions} | ${(r.ctr * 100).toFixed(1)}% | ${r.position.toFixed(1)} |`)
-    .join('\n');
-
-  const gscTopPages = (gsc.topPages.data.rows || [])
-    .map(r => `| ${r.keys[0].replace(GSC_SITE_URL, '/')} | ${r.clicks} | ${r.impressions} |`)
-    .join('\n');
-
-  return `# 📊 週次アナリティクスレポート（${start} 〜 ${end}）
-
-## Google Analytics 4
-
-| 指標 | 値 |
+    ga4Section = `| 指標 | 値 |
 |------|-----|
 | セッション数 | ${sessions} |
 | ユーザー数 | ${users} |
@@ -152,13 +135,29 @@ ${topPages || '| データなし | - |'}
 ### 流入チャネル
 | チャネル | セッション |
 |----------|-----------|
-${sources || '| データなし | - |'}
+${sources || '| データなし | - |'}`;
+  } else {
+    ga4Section = '> ⚠️ GA4データの取得に失敗しました（サービスアカウントのGA4プロパティへの権限を確認してください）。';
+  }
 
----
+  // GSC（取得失敗時は gsc = null）
+  let gscSection;
+  if (gsc) {
+    const gscOverview = gsc.overview.data.rows?.[0] || {};
+    const clicks = gscOverview.clicks || 0;
+    const impressions = gscOverview.impressions || 0;
+    const ctr = gscOverview.ctr ? (gscOverview.ctr * 100).toFixed(1) + '%' : '0%';
+    const position = gscOverview.position ? gscOverview.position.toFixed(1) : '-';
 
-## Google Search Console
+    const topQueries = (gsc.topQueries.data.rows || [])
+      .map(r => `| ${r.keys[0]} | ${r.clicks} | ${r.impressions} | ${(r.ctr * 100).toFixed(1)}% | ${r.position.toFixed(1)} |`)
+      .join('\n');
 
-| 指標 | 値 |
+    const gscTopPages = (gsc.topPages.data.rows || [])
+      .map(r => `| ${r.keys[0].replace(GSC_SITE_URL, '/')} | ${r.clicks} | ${r.impressions} |`)
+      .join('\n');
+
+    gscSection = `| 指標 | 値 |
 |------|-----|
 | クリック数 | ${clicks} |
 | 表示回数 | ${impressions} |
@@ -173,7 +172,22 @@ ${topQueries || '| データなし | - | - | - | - |'}
 ### ページ別パフォーマンス
 | ページ | クリック | 表示回数 |
 |--------|---------|---------|
-${gscTopPages || '| データなし | - | - |'}
+${gscTopPages || '| データなし | - | - |'}`;
+  } else {
+    gscSection = '> ⚠️ Search Consoleデータの取得に失敗しました（サービスアカウントのGSCプロパティへの権限を確認してください）。';
+  }
+
+  return `# 📊 週次アナリティクスレポート（${start} 〜 ${end}）
+
+## Google Analytics 4
+
+${ga4Section}
+
+---
+
+## Google Search Console
+
+${gscSection}
 
 ---
 
@@ -245,11 +259,27 @@ async function main() {
   const authClient = await auth.getClient();
   const { start, end } = getDateRange();
 
+  // GA4・GSCの一方が落ちてもパイプライン全体（PR作成→分析→改善→マージ）を
+  // 止めないよう、それぞれ個別に失敗を許容する。両方失敗した場合のみ中断する。
   console.log('GA4データ取得中...');
-  const ga4 = await fetchGA4Data(authClient);
+  let ga4 = null;
+  try {
+    ga4 = await fetchGA4Data(authClient);
+  } catch (err) {
+    console.warn('GA4データの取得に失敗しました（GSCのみで続行）:', err.message);
+  }
 
   console.log('GSCデータ取得中...');
-  const gsc = await fetchGSCData(authClient);
+  let gsc = null;
+  try {
+    gsc = await fetchGSCData(authClient);
+  } catch (err) {
+    console.warn('GSCデータの取得に失敗しました:', err.message);
+  }
+
+  if (!ga4 && !gsc) {
+    throw new Error('GA4・GSCの両方でデータ取得に失敗したため、レポートを作成できません。');
+  }
 
   console.log('レポート生成中...');
   const report = formatReport(ga4, gsc, { start, end });
