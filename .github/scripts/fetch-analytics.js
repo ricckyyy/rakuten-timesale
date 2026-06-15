@@ -239,7 +239,7 @@ async function createPR(title, body, end) {
   // PR作成
   const pr = await githubApi('/pulls', 'POST', {
     title,
-    body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\nClaudeに「このPRを分析して改善提案して」と依頼してください。`,
+    body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\n\n**次のステップ（手動）:**\n1. データを確認する\n2. 必要に応じて \`lib/constants.ts\` のSEOコンテンツを改善する\n3. 問題なければマージする`,
     head: branch,
     base: 'main',
   });
@@ -259,8 +259,8 @@ async function main() {
   const authClient = await auth.getClient();
   const { start, end } = getDateRange();
 
-  // GA4・GSCの一方が落ちてもパイプライン全体（PR作成→分析→改善→マージ）を
-  // 止めないよう、それぞれ個別に失敗を許容する。両方失敗した場合のみ中断する。
+  // GA4・GSCの一方が落ちても止めないよう、それぞれ個別に失敗を許容する。
+  // 両方失敗した場合のみ中断する。
   console.log('GA4データ取得中...');
   let ga4 = null;
   try {
@@ -284,23 +284,12 @@ async function main() {
   console.log('レポート生成中...');
   const report = formatReport(ga4, gsc, { start, end });
 
-  // 後続の分析ステップがローカルから最新レポートを読めるよう書き出す
-  fs.writeFileSync(`analytics/weekly-${end}.md`, report);
-
   console.log('GitHub PR作成中...');
-  const { prNumber, branch } = await createPR(
+  await createPR(
     `📊 週次レポート ${end}`,
     report,
     end
   );
-
-  // 後続ステップ（分析→改善→マージ）へ PR 情報を引き渡す
-  if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(
-      process.env.GITHUB_OUTPUT,
-      `pr_number=${prNumber}\npr_branch=${branch}\n`
-    );
-  }
 }
 
 main().catch(err => {
