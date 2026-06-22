@@ -2,6 +2,11 @@ const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.log('ANTHROPIC_API_KEY が設定されていないため、Claude分析をスキップします');
+  process.exit(0);
+}
+
 const repo = process.env.GITHUB_REPOSITORY;
 const token = process.env.GITHUB_TOKEN;
 const prNumber = process.env.PR_NUMBER;
