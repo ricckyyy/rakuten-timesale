@@ -33,7 +33,9 @@ export async function generateMetadata(
   const today = new Date().toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
   const displayName = category.seoName ?? category.name;
   const ogTitle = `【${today}更新】楽天 ${displayName} タイムセール・特価品`;
-  const titleStr = `楽天 ${displayName} タイムセール【${today}更新】最安値・セール情報`;
+  const titleStr = slug === 'beauty'
+    ? `セール ビューティー特集｜楽天 ビューティー・コスメ タイムセール【${today}更新】`
+    : `楽天 ${displayName} タイムセール【${today}更新】最安値・セール情報`;
 
   return {
     title: titleStr,
@@ -161,6 +163,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </h2>
         <div className="prose max-w-none text-gray-700 dark:text-gray-300 space-y-3">
           <p>{category.description}</p>
+          {slug === 'beauty' && (
+            <p>
+              楽天市場の「セール ビューティー」「美容 セール」「コスメ セール」関連のセール商品をまとめて掲載しています。
+              スキンケア・化粧品・美容液・ヘアケア・ボディケア・日焼け止め・メイクアップ・香水まで、ビューティーカテゴリの人気アイテムが
+              タイムセール価格で見つかります。化粧品 セール 情報を毎日チェックしたい方や、楽天 ビューティー セールでお気に入りのコスメをお得に買いたい方に最適です。
+            </p>
+          )}
           <p>
             楽天市場の{category.name}セールは毎日開催されており、タイムセール・スーパーSALE・お買い物マラソンなどのイベントと組み合わせることで、さらにお得にお買い物できます。
             楽天ポイントが貯まる・使えるため、ポイント還元率が高いSPU達成時にまとめ買いするのがおすすめです。
