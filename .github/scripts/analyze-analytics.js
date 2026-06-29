@@ -71,6 +71,12 @@ function validateConstants(content) {
 }
 
 async function main() {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.log('ANTHROPIC_API_KEY が未設定のため、自動分析・改善・マージをスキップします。');
+    console.log('週次レポートPRは作成済みです。手動で分析・改善・マージしてください。');
+    return;
+  }
+
   const analyticsDir = 'analytics';
   const files = fs.readdirSync(analyticsDir)
     .filter(f => f.endsWith('.md'))
