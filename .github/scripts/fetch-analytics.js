@@ -102,7 +102,7 @@ async function fetchGSCData(authClient) {
   return { overview, topQueries, topPages };
 }
 
-function formatReport(ga4, gsc, dateRange) {
+function formatReport(ga4, gsc, dateRange, errors) {
   const { start, end } = dateRange;
 
   // GA4（取得失敗時は ga4 = null）
@@ -137,7 +137,11 @@ ${topPages || '| データなし | - |'}
 |----------|-----------|
 ${sources || '| データなし | - |'}`;
   } else {
-    ga4Section = '> ⚠️ GA4データの取得に失敗しました（サービスアカウントのGA4プロパティへの権限を確認してください）。';
+    ga4Section = `> ⚠️ GA4データの取得に失敗しました。以下のサービスアカウントに、GA4プロパティ（\`${GA4_PROPERTY_ID}\`）の管理画面から「閲覧者」権限を付与してください。
+>
+> - 付与先アカウント: \`${SA_KEY.client_email}\`
+> - 手順: GA4管理画面 → プロパティ設定 → プロパティのアクセス管理 → 上記メールアドレスを追加（役割: 閲覧者）
+> - エラー詳細: \`${errors?.ga4 || '不明'}\``;
   }
 
   // GSC（取得失敗時は gsc = null）
@@ -174,7 +178,11 @@ ${topQueries || '| データなし | - | - | - | - |'}
 |--------|---------|---------|
 ${gscTopPages || '| データなし | - | - |'}`;
   } else {
-    gscSection = '> ⚠️ Search Consoleデータの取得に失敗しました（サービスアカウントのGSCプロパティへの権限を確認してください）。';
+    gscSection = `> ⚠️ Search Consoleデータの取得に失敗しました。以下のサービスアカウントを、Search Consoleのプロパティ（\`${GSC_SITE_URL}\`）に「フルユーザー」または「制限付きユーザー」として追加してください。
+>
+> - 付与先アカウント: \`${SA_KEY.client_email}\`
+> - 手順: Search Console → 設定 → ユーザーと権限 → 上記メールアドレスを追加
+> - エラー詳細: \`${errors?.gsc || '不明'}\``;
   }
 
   return `# 📊 週次アナリティクスレポート（${start} 〜 ${end}）
@@ -263,10 +271,12 @@ async function main() {
   // 止めないよう、それぞれ個別に失敗を許容する。両方失敗した場合のみ中断する。
   console.log('GA4データ取得中...');
   let ga4 = null;
+  const errors = {};
   try {
     ga4 = await fetchGA4Data(authClient);
   } catch (err) {
     console.warn('GA4データの取得に失敗しました（GSCのみで続行）:', err.message);
+    errors.ga4 = err.message;
   }
 
   console.log('GSCデータ取得中...');
@@ -275,6 +285,7 @@ async function main() {
     gsc = await fetchGSCData(authClient);
   } catch (err) {
     console.warn('GSCデータの取得に失敗しました:', err.message);
+    errors.gsc = err.message;
   }
 
   if (!ga4 && !gsc) {
@@ -282,7 +293,7 @@ async function main() {
   }
 
   console.log('レポート生成中...');
-  const report = formatReport(ga4, gsc, { start, end });
+  const report = formatReport(ga4, gsc, { start, end }, errors);
 
   // 後続の分析ステップがローカルから最新レポートを読めるよう書き出す
   fs.writeFileSync(`analytics/weekly-${end}.md`, report);

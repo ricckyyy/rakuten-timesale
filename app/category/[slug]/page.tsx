@@ -33,9 +33,17 @@ export async function generateMetadata(
   const today = new Date().toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' });
   const displayName = category.seoName ?? category.name;
   const ogTitle = `【${today}更新】楽天 ${displayName} タイムセール・特価品`;
-  const titleStr = slug === 'beauty'
-    ? `セール ビューティー特集｜楽天 ビューティー・コスメ タイムセール【${today}更新】`
-    : `楽天 ${displayName} タイムセール【${today}更新】最安値・セール情報`;
+
+  // 実際の検索クエリ（Search Console計測値）に近い語順のtitleでCTRを狙う
+  const titleBySlug: Record<string, string> = {
+    beauty: `セール ビューティー特集｜楽天 ビューティー・コスメ タイムセール【${today}更新】`,
+    electronics: `家電 セール特集｜楽天 家電 タイムセール【${today}更新】最安値情報`,
+    food: `食品 セール特集｜楽天 グルメ・食品 タイムセール【${today}更新】お得情報`,
+    fashion: `ファッション セール特集｜楽天 アパレル タイムセール【${today}更新】最新情報`,
+    books: `本 セール特集｜楽天ブックス タイムセール【${today}更新】お得情報`,
+    sports: `スポーツ用品 セール特集｜楽天 スポーツ・アウトドア タイムセール【${today}更新】`,
+  };
+  const titleStr = titleBySlug[slug] ?? `楽天 ${displayName} タイムセール【${today}更新】最安値・セール情報`;
 
   return {
     title: titleStr,
