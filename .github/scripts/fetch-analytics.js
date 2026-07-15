@@ -200,6 +200,7 @@ ${gscSection}
 ---
 
 > このレポートは自動生成されました。分析・改善提案はClaudeに依頼してください。
+> 分析時は \`GROWTH_ROADMAP.md\` のマイルストーン目標・遅延分析チェックリストと照合し、進捗ログに追記してください。
 `;
 }
 
@@ -247,7 +248,7 @@ async function createPR(title, body, end) {
   // PR作成
   const pr = await githubApi('/pulls', 'POST', {
     title,
-    body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\nClaudeに「このPRを分析して改善提案して」と依頼してください。`,
+    body: `## 週次アナリティクスレポート\n\nこのPRには自動取得した分析データが含まれています。\nClaudeに「このPRを分析して改善提案して」と依頼してください。\n\n分析時は \`GROWTH_ROADMAP.md\` のマイルストーン目標・遅延分析チェックリストと照合し、進捗ログに追記してください。`,
     head: branch,
     base: 'main',
   });
