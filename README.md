@@ -136,6 +136,8 @@ Vercelの「Environment Variables」セクションで以下を追加：
 | 2ヶ月目 | 1,500 | 2,000〜5,000円 |
 | 3ヶ月目 | 3,000〜5,000 | 5,000〜15,000円 |
 
+詳細なマイルストーン・進捗ログ・遅延分析チェックリストは [`GROWTH_ROADMAP.md`](./GROWTH_ROADMAP.md) を参照してください。
+
 ## 📈 SEO対策チェックリスト
 
 - [x] メタタグ設定（title, description）
