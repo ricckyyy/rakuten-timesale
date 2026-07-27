@@ -1,5 +1,8 @@
 name: Weekly Analytics Report
 
+# daily-analytics-fetch.yml が毎日蓄積した analytics/daily/*.json 7日分を
+# 集計してPRを作成する（重複・欠落のない週次実績）。GA4/GSCへは直接アクセスしない。
+
 on:
   schedule:
     - cron: '0 1 * * 1'  # 毎週月曜日 日本時間10:00 (UTC 01:00)
@@ -22,17 +25,14 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install googleapis @anthropic-ai/sdk
+        run: npm install @anthropic-ai/sdk
 
-      - name: Fetch analytics and create PR
+      - name: Aggregate daily data and create PR
         id: fetch
         env:
-          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
-          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
-          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: node .github/scripts/fetch-analytics.js
+        run: node .github/scripts/aggregate-weekly.js
 
       # GITHUB_TOKEN で作成した PR は pull_request イベントを発火しないため、
       # 別ワークフローに依存せず同一ジョブ内で 分析→改善→マージ まで完結させる

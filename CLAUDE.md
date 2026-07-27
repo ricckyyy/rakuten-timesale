@@ -31,8 +31,11 @@ npm run dev     # 開発サーバー
 
 - `lib/constants.ts` — カテゴリ定義（keywords/description/FAQ）
 - `app/category/[slug]/page.tsx` — カテゴリページのメタデータ・title生成ロジック
-- `analytics/weekly-*.md` — 週次アナリティクスレポート（自動生成、編集不要）
-- `.github/scripts/fetch-analytics.js` / `analyze-analytics.js` — 週次レポート自動生成・分析パイプライン
+- `analytics/daily/*.json` — 日次生データ（自動生成、編集不要。毎日UTC 2:00にGA4/GSCから3日前の1日分を取得）
+- `analytics/weekly-*.md` — 週次アナリティクスレポート（自動生成、編集不要。日次データ7日分を集計した重複・欠落のない実績）
+- `.github/scripts/fetch-analytics-daily.js` — 日次データ取得（`daily-analytics-fetch.yml`から実行、mainへ直接コミット）
+- `.github/scripts/aggregate-weekly.js` — 日次データ7日分を集計して週次レポートPRを作成（`weekly-analytics.yml`から実行）
+- `.github/scripts/analyze-analytics.js` — 週次レポート分析パイプライン
 
 ## 環境変数（収益化に直結する設定）
 
