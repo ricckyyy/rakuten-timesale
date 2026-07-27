@@ -1,0 +1,37 @@
+name: Daily Analytics Fetch
+
+# GA4/GSCから1日分（3日前、反映ラグを避けるため）のデータを取得し、
+# analytics/daily/YYYY-MM-DD.json としてmainへ直接コミットする。
+# 週次の集計・PR作成は weekly-analytics.yml が担当する。
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 毎日 UTC 2:00 (日本時間 11:00)
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install googleapis
+
+      - name: Fetch daily analytics
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node .github/scripts/fetch-analytics-daily.js
