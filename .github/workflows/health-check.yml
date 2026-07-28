@@ -1,0 +1,34 @@
+name: Daily Health Check
+
+# サイトの疎通・アフィリエイトリンク生成・カテゴリ空表示率・
+# 未対応の週次PR滞留・マイルストーン期限超過を毎日チェックする。
+# 異常が見つかった場合のみGitHub Issueを作成（既存のオープンIssueがあればコメント追記）。
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 毎日 UTC 22:00 (日本時間 翌7:00)
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run health check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SITE_URL: https://rakuten-timesale.vercel.app
+        run: node .github/scripts/health-check.js
