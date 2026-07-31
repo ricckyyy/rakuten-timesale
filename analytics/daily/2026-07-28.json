@@ -1,0 +1,46 @@
+{
+  "date": "2026-07-28",
+  "fetchedAt": "2026-07-31T03:44:07.814Z",
+  "ga4": {
+    "sessions": 13,
+    "users": 13,
+    "pageviews": 12,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 12
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 13
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 24.75,
+    "topQueries": [
+      {
+        "query": "美容 セール",
+        "clicks": 0,
+        "impressions": 3
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
