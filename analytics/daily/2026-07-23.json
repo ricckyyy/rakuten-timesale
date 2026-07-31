@@ -1,0 +1,25 @@
+{
+  "date": "2026-07-23",
+  "fetchedAt": "2026-07-31T03:44:09.284Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 18,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
