@@ -8,7 +8,23 @@ name: Daily Analytics Fetch
 on:
   schedule:
     - cron: '0 2 * * *'  # 毎日 UTC 2:00 (日本時間 11:00)
+  # 手動実行では過去日の埋め戻しができる。未入力なら定期実行と同じ「3日前の1日分」。
   workflow_dispatch:
+    inputs:
+      target_date:
+        description: '取得範囲の最終日 (YYYY-MM-DD)。未入力なら3日前'
+        required: false
+        type: string
+      backfill_days:
+        description: '最終日から遡って取得する日数'
+        required: false
+        default: '1'
+        type: string
+      overwrite:
+        description: '取得済みの日も取り直す'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   fetch:
@@ -35,6 +51,9 @@ jobs:
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          TARGET_DATE: ${{ inputs.target_date }}
+          BACKFILL_DAYS: ${{ inputs.backfill_days }}
+          OVERWRITE: ${{ inputs.overwrite }}
         run: node .github/scripts/fetch-analytics-daily.js
 
       # 取得が失敗した日も再生成する。その日が欠落行として推移表に出るため、
