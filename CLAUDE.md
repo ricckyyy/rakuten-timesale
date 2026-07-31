@@ -32,8 +32,10 @@ npm run dev     # 開発サーバー
 - `lib/constants.ts` — カテゴリ定義（keywords/description/FAQ）
 - `app/category/[slug]/page.tsx` — カテゴリページのメタデータ・title生成ロジック
 - `analytics/daily/*.json` — 日次生データ（自動生成、編集不要。毎日UTC 2:00にGA4/GSCから3日前の1日分を取得）
+- `analytics/DAILY.md` — 日別推移表（自動生成、編集不要。毎日上書きされる1枚。直近30日の日別数値と直近7日／前7日の比較のみで、**解釈や改善提案は書かない**）
 - `analytics/weekly-*.md` — 週次アナリティクスレポート（自動生成、編集不要。日次データ7日分を集計した重複・欠落のない実績）
-- `.github/scripts/fetch-analytics-daily.js` — 日次データ取得（`daily-analytics-fetch.yml`から実行、mainへ直接コミット）
+- `.github/scripts/fetch-analytics-daily.js` — 日次データ取得（`daily-analytics-fetch.yml`から実行、mainへ直接コミット）。手動実行時は`target_date`/`backfill_days`/`overwrite`で過去日の埋め戻しが可能
+- `.github/scripts/build-daily-report.js` — `analytics/DAILY.md`を再生成（`daily-analytics-fetch.yml`から実行）。LLMは使わない純粋な整形処理
 - `.github/scripts/aggregate-weekly.js` — 日次データ7日分を集計して週次レポートPRを作成（`weekly-analytics.yml`から実行）
 - `.github/scripts/analyze-analytics.js` — 週次レポート分析パイプライン
 

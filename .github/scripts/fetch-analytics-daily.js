@@ -10,6 +10,14 @@ const GITHUB_REPO = process.env.GITHUB_REPOSITORY;
 // GSCのデータ反映には数日のラグがあるため、直近すぎない日を対象にする
 const LAG_DAYS = 3;
 
+// 過去日の埋め戻し用。未指定なら従来どおり「3日前の1日分」だけを取得する。
+// TARGET_DATE   : 取得範囲の最終日（YYYY-MM-DD）
+// BACKFILL_DAYS : TARGET_DATEから遡って何日分を取得するか
+// OVERWRITE     : trueなら既存の日次ファイルも取り直す
+const TARGET_DATE = process.env.TARGET_DATE;
+const BACKFILL_DAYS = Number(process.env.BACKFILL_DAYS || 1);
+const OVERWRITE = process.env.OVERWRITE === 'true';
+
 const auth = new google.auth.GoogleAuth({
   credentials: SA_KEY,
   scopes: [
@@ -20,8 +28,33 @@ const auth = new google.auth.GoogleAuth({
 
 function getTargetDate() {
   const d = new Date();
-  d.setDate(d.getDate() - LAG_DAYS);
+  d.setUTCDate(d.getUTCDate() - LAG_DAYS);
   return d.toISOString().split('T')[0];
+}
+
+// 取得対象日を新しい順に並べて返す
+function getTargetDates() {
+  if (TARGET_DATE && !/^\d{4}-\d{2}-\d{2}$/.test(TARGET_DATE)) {
+    throw new Error(`TARGET_DATEの形式が不正です（YYYY-MM-DD）: ${TARGET_DATE}`);
+  }
+  if (!Number.isInteger(BACKFILL_DAYS) || BACKFILL_DAYS < 1) {
+    throw new Error(`BACKFILL_DAYSは1以上の整数を指定してください: ${process.env.BACKFILL_DAYS}`);
+  }
+
+  const end = TARGET_DATE || getTargetDate();
+  if (end > getTargetDate()) {
+    console.warn(
+      `警告: ${end} はデータ反映ラグ(${LAG_DAYS}日)の内側です。数値が未確定の可能性があります。`
+    );
+  }
+
+  const dates = [];
+  for (let i = 0; i < BACKFILL_DAYS; i++) {
+    const d = new Date(`${end}T00:00:00Z`);
+    d.setUTCDate(d.getUTCDate() - i);
+    dates.push(d.toISOString().split('T')[0]);
+  }
+  return dates;
 }
 
 async function fetchGA4Data(authClient, date) {
@@ -152,10 +185,7 @@ async function commitDailyFile(date, content) {
   });
 }
 
-async function main() {
-  const authClient = await auth.getClient();
-  const date = getTargetDate();
-
+async function fetchOneDay(authClient, date) {
   console.log(`対象日: ${date}`);
   const errors = {};
 
@@ -195,6 +225,45 @@ async function main() {
   console.log('GitHubにコミット中...');
   await commitDailyFile(date, content);
   console.log(`完了: analytics/daily/${date}.json`);
+}
+
+async function main() {
+  const authClient = await auth.getClient();
+  const dates = getTargetDates();
+
+  const skipped = [];
+  const succeeded = [];
+  const failed = [];
+
+  for (const date of dates) {
+    if (!OVERWRITE && fs.existsSync(`analytics/daily/${date}.json`)) {
+      console.log(`スキップ: analytics/daily/${date}.json は取得済みです。`);
+      skipped.push(date);
+      continue;
+    }
+
+    try {
+      await fetchOneDay(authClient, date);
+      succeeded.push(date);
+    } catch (err) {
+      // 1日失敗しても残りの日は続行する（埋め戻しが1日で止まらないように）
+      console.warn(`${date} の取得に失敗しました: ${err.message}`);
+      failed.push({ date, message: err.message });
+    }
+  }
+
+  console.log(
+    `\n取得${succeeded.length}件 / スキップ${skipped.length}件 / 失敗${failed.length}件`
+  );
+  if (failed.length > 0) {
+    for (const f of failed) {
+      console.error(`- ${f.date}: ${f.message}`);
+    }
+    // 1日でも取得できていれば後続の推移表生成に進ませる
+    if (succeeded.length === 0) {
+      throw new Error('対象日すべてでデータ取得に失敗しました。');
+    }
+  }
 }
 
 main().catch((err) => {

@@ -2,12 +2,29 @@ name: Daily Analytics Fetch
 
 # GA4/GSCから1日分（3日前、反映ラグを避けるため）のデータを取得し、
 # analytics/daily/YYYY-MM-DD.json としてmainへ直接コミットする。
-# 週次の集計・PR作成は weekly-analytics.yml が担当する。
+# あわせて日別の推移表 analytics/DAILY.md を再生成する（1枚を毎日上書き）。
+# 週次の集計・PR作成・分析は weekly-analytics.yml が担当する。
 
 on:
   schedule:
     - cron: '0 2 * * *'  # 毎日 UTC 2:00 (日本時間 11:00)
+  # 手動実行では過去日の埋め戻しができる。未入力なら定期実行と同じ「3日前の1日分」。
   workflow_dispatch:
+    inputs:
+      target_date:
+        description: '取得範囲の最終日 (YYYY-MM-DD)。未入力なら3日前'
+        required: false
+        type: string
+      backfill_days:
+        description: '最終日から遡って取得する日数'
+        required: false
+        default: '1'
+        type: string
+      overwrite:
+        description: '取得済みの日も取り直す'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   fetch:
@@ -34,4 +51,16 @@ jobs:
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          TARGET_DATE: ${{ inputs.target_date }}
+          BACKFILL_DAYS: ${{ inputs.backfill_days }}
+          OVERWRITE: ${{ inputs.overwrite }}
         run: node .github/scripts/fetch-analytics-daily.js
+
+      # 取得が失敗した日も再生成する。その日が欠落行として推移表に出るため、
+      # パイプラインが止まっていることがレポート上で分かる。
+      - name: Build daily trend report
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node .github/scripts/build-daily-report.js
