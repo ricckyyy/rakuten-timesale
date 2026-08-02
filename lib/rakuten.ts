@@ -65,7 +65,7 @@ export async function fetchRakutenProducts(
     }
 
     // データを変換
-    return data.Items.map((item) => {
+    const products = data.Items.map((item) => {
       const product = item.Item;
       const rawImageUrl = product.mediumImageUrls?.[0]?.imageUrl || product.imageUrl || '';
       const imageUrl = rawImageUrl.replace('_ex=128x128', '_ex=400x400');
@@ -82,7 +82,16 @@ export async function fetchRakutenProducts(
         rating: product.reviewAverage,
         reviewCount: product.reviewCount,
       };
-    }).filter((p) => p.reviewCount === undefined || p.reviewCount > 0);
+    });
+
+    // レビュー実績のある商品を優先して並べるが、除外はしない。
+    // sort:standard はレビュー0件の商品が大半を占めることがあり、以前は除外により
+    // カテゴリページが「現在セール商品がありません」の空表示になっていた。
+    // 空ページはSEO・CVRの双方に不利なため、レビュー0件の商品は後方に回すに留める。
+    const reviewed = products.filter((p) => p.reviewCount === undefined || p.reviewCount > 0);
+    const unreviewed = products.filter((p) => p.reviewCount !== undefined && p.reviewCount === 0);
+
+    return [...reviewed, ...unreviewed];
   } catch (error) {
     console.error('楽天API取得エラー:', error);
     return [];

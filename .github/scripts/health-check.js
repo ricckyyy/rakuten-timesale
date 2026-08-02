@@ -32,7 +32,7 @@ async function githubApi(path, method = 'GET', body) {
 async function checkPages() {
   const problems = [];
   let affiliateLinkFound = false;
-  let emptyCategoryCount = 0;
+  const emptyCategories = [];
 
   for (const p of PATHS) {
     const url = `${SITE_URL}${p}`;
@@ -54,7 +54,7 @@ async function checkPages() {
       affiliateLinkFound = true;
     }
     if (p.startsWith('/category/') && html.includes(EMPTY_TEXT)) {
-      emptyCategoryCount++;
+      emptyCategories.push(p.replace('/category/', ''));
     }
   }
 
@@ -64,9 +64,12 @@ async function checkPages() {
     );
   }
 
-  if (emptyCategoryCount >= 4) {
+  // 1件でも空表示なら報告する。検索表示の大半は特定のカテゴリページに集中しており
+  // （2026-07-28週は/category/beautyだけで全表示回数の8割）、そのページが空になると
+  // 件数が少なくてもSEO・CVRへの影響が大きいため、閾値では見逃せない。
+  if (emptyCategories.length > 0) {
     problems.push(
-      `- カテゴリページ${CATEGORIES.length}件中${emptyCategoryCount}件が「${EMPTY_TEXT}」の空表示でした（\`lib/rakuten.ts\`のレビュー数フィルタが原因の既知事象。\`GROWTH_ROADMAP.md\`チェックリストD参照）。`
+      `- カテゴリページ${CATEGORIES.length}件中${emptyCategories.length}件が「${EMPTY_TEXT}」の空表示でした: ${emptyCategories.join(', ')}`
     );
   }
 
