@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-31",
+  "fetchedAt": "2026-08-03T05:43:50.849Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 26.5,
+    "topQueries": [
+      {
+        "query": "美容 セール",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
