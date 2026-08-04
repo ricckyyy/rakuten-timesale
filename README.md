@@ -138,6 +138,24 @@ Vercelの「Environment Variables」セクションで以下を追加：
 
 詳細なマイルストーン・進捗ログ・遅延分析チェックリストは [`GROWTH_ROADMAP.md`](./GROWTH_ROADMAP.md) を参照してください。
 
+## 📊 アナリティクス自動化
+
+### 運用フロー（2026-08〜）
+
+毎日 UTC 2:00 に `daily-analytics-fetch.yml` が以下をすべて実行します（PRは作成しません）：
+
+1. **値取得** — GA4/GSC から3日前の1日分データを `analytics/daily/YYYY-MM-DD.json` に保存（main へ直コミット）
+2. **日次推移表更新** — `analytics/DAILY.md` を再生成
+3. **合算分析** — 蓄積済み日次データの直近7日分を合算し `analytics/WEEKLY.md` を更新（main へ直コミット）
+
+週次PR作成ワークフロー（`weekly-analytics.yml`）は2026-08に廃止しました。
+
+| ファイル | 内容 |
+|---|---|
+| `analytics/daily/YYYY-MM-DD.json` | 1日分の生データ（自動生成・編集不要） |
+| `analytics/DAILY.md` | 直近30日の日別推移表（自動生成・編集不要） |
+| `analytics/WEEKLY.md` | 直近7日間の合算レポート（自動生成・編集不要） |
+
 ## 📈 SEO対策チェックリスト
 
 - [x] メタタグ設定（title, description）
