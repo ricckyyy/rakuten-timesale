@@ -2,8 +2,9 @@ name: Daily Analytics Fetch
 
 # GA4/GSCから1日分（3日前、反映ラグを避けるため）のデータを取得し、
 # analytics/daily/YYYY-MM-DD.json としてmainへ直接コミットする。
-# あわせて日別の推移表 analytics/DAILY.md を再生成する（1枚を毎日上書き）。
-# 週次の集計・PR作成・分析は weekly-analytics.yml が担当する。
+# あわせて日別の推移表 analytics/DAILY.md を再生成し、
+# 直近7日分を合算した analytics/WEEKLY.md も更新する（mainへ直接コミット）。
+# 週次PR作成運用は2026-08に廃止。取得→合算分析→反映がこのワークフローで完結する。
 
 on:
   schedule:
@@ -64,3 +65,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node .github/scripts/build-daily-report.js
+
+      # 蓄積済み日次データ（直近7日分）を合算して analytics/WEEKLY.md を更新する。
+      # PRは作成せず main へ直接コミット（fetch-analytics-daily.js がコミットを担う）。
+      # DAYS 環境変数で集計対象日数を変更可能（デフォルト7日）。
+      - name: Aggregate daily data into weekly summary
+        if: always()
+        run: node .github/scripts/aggregate-daily.js

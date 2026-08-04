@@ -1,13 +1,12 @@
 name: Analyze Analytics PR
 
-# 本流の「取得→分析→改善→マージ」は weekly-analytics.yml が同一ジョブ内で実行する。
-# このワークフローは、人が手動で analytics/** ブランチの PR を開いた場合のフォールバック。
-# 注意: pull_request の branches フィルタは base ブランチに対して評価されるため、
-#       head ブランチ（analytics/**）の判定は job 側の if で行う。
-#       また GITHUB_TOKEN で作成された PR はこのイベントを発火しない。
+# [廃止] 2026-08 以降は weekly-analytics.yml の週次PR運用を停止したため、
+# このフォールバックワークフローも無効化しました。
+# 分析は daily-analytics-fetch.yml が毎日直接 main へコミットする運用に移行しました。
+# 将来復活させる場合は on: ブロックのコメントアウトを外してください。
 on:
-  pull_request:
-    types: [opened]
+  # pull_request:
+  #   types: [opened]
 
 jobs:
   analyze:

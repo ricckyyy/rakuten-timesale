@@ -1,12 +1,13 @@
 name: Weekly Analytics Report
 
-# daily-analytics-fetch.yml が毎日蓄積した analytics/daily/*.json 7日分を
-# 集計してPRを作成する（重複・欠落のない週次実績）。GA4/GSCへは直接アクセスしない。
+# [廃止] 2026-08 以降は daily-analytics-fetch.yml が毎日取得・合算分析を実行するため、
+# 週次PR作成フローは停止しました。将来復活させる場合は on: ブロックのコメントアウトを外してください。
+# 旧運用: analytics/daily/*.json 7日分を集計してPRを作成していた。
 
 on:
-  schedule:
-    - cron: '0 22 * * 5'  # 毎週土曜日 日本時間7:00 (UTC金曜22:00)
-  workflow_dispatch:  # 手動実行も可能
+  # schedule:
+  #   - cron: '0 22 * * 5'  # 毎週土曜日 日本時間7:00 (UTC金曜22:00)
+  workflow_dispatch:  # 手動確認用に残す（schedule は無効化）
 
 jobs:
   analytics:
