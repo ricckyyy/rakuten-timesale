@@ -16,8 +16,6 @@
  *   TARGET_DATE         - 対象データ日付 (YYYY-MM-DD)、省略時は3日前
  */
 
-const https = require('https');
-
 const token = process.env.GITHUB_TOKEN;
 const repo = process.env.GITHUB_REPOSITORY; // e.g. "ricckyyy/rakuten-timesale"
 const runId = process.env.GITHUB_RUN_ID;
@@ -42,10 +40,10 @@ const issueTitle = isFailure
 
 const runUrl = `https://github.com/${repo}/actions/runs/${runId}`;
 
-// JST表記
+// JST表記（UTC基準で+9時間）
 const jstDate = (() => {
   const d = new Date(`${targetDate}T00:00:00Z`);
-  d.setHours(d.getHours() + 9);
+  d.setUTCHours(d.getUTCHours() + 9);
   return d.toISOString().slice(0, 10);
 })();
 
@@ -66,75 +64,58 @@ const issueBody = `## 日次データ取得レポート
 *同日の重複Issueは作成されません（方針A: スキップ）。*
 `;
 
-const baseLabels = ['daily-metrics'];
-const labels = isFailure ? [...baseLabels, 'failed'] : baseLabels;
-
-function apiRequest(method, path, body) {
-  return new Promise((resolve, reject) => {
-    const data = body ? JSON.stringify(body) : null;
-    const options = {
-      hostname: 'api.github.com',
-      path,
-      method,
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github+json',
-        'User-Agent': 'daily-issue-script',
-        'X-GitHub-Api-Version': '2022-11-28',
-        ...(data ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } : {}),
-      },
-    };
-    const req = https.request(options, (res) => {
-      let buf = '';
-      res.on('data', (chunk) => { buf += chunk; });
-      res.on('end', () => {
-        try { resolve({ status: res.statusCode, body: JSON.parse(buf) }); }
-        catch { resolve({ status: res.statusCode, body: buf }); }
-      });
-    });
-    req.on('error', reject);
-    if (data) req.write(data);
-    req.end();
+async function githubApi(path, method = 'GET', body) {
+  const url = path.startsWith('https://')
+    ? path
+    : `https://api.github.com${path}`;
+  const response = await fetch(url, {
+    method,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+    body: body ? JSON.stringify(body) : undefined,
   });
+  return response;
 }
 
 async function ensureLabel(name, color, description) {
-  const res = await apiRequest('GET', `/repos/${owner}/${repoName}/labels/${encodeURIComponent(name)}`);
+  const res = await githubApi(`/repos/${owner}/${repoName}/labels/${encodeURIComponent(name)}`);
   if (res.status === 404) {
-    const create = await apiRequest('POST', `/repos/${owner}/${repoName}/labels`, { name, color, description });
+    const create = await githubApi(`/repos/${owner}/${repoName}/labels`, 'POST', { name, color, description });
     if (create.status === 201) {
       console.log(`Label created: ${name}`);
     } else {
       console.warn(`Label creation failed for "${name}" (status ${create.status}), continuing anyway.`);
+      return false;
     }
   }
+  return true;
 }
 
 async function findExistingIssue() {
-  // タイトルが "daily-metrics: YYYY-MM-DD" で始まるIssueを検索
-  const searchTitle = `daily-metrics: ${titleDate}`;
-  // ページング対策: 最大2ページ検索
-  for (let page = 1; page <= 2; page++) {
-    const res = await apiRequest(
-      'GET',
-      `/repos/${owner}/${repoName}/issues?labels=daily-metrics&state=all&per_page=50&page=${page}`
-    );
-    if (res.status !== 200 || !Array.isArray(res.body)) break;
-    const found = res.body.find((i) => i.title.startsWith(searchTitle));
-    if (found) return found;
-    if (res.body.length < 50) break;
-  }
-  return null;
+  // Search APIでタイトル一致を検索（ラベルの有無に依存しない）
+  const q = encodeURIComponent(`repo:${owner}/${repoName} is:issue in:title "daily-metrics: ${titleDate}"`);
+  const res = await githubApi(`https://api.github.com/search/issues?q=${q}&per_page=5`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (!Array.isArray(data.items)) return null;
+  return data.items.find((i) => i.title.startsWith(`daily-metrics: ${titleDate}`)) || null;
 }
 
 async function main() {
   console.log(`Target date: ${targetDate}, status: ${status}`);
 
-  // ラベル準備（失敗しても続行）
+  // ラベル準備（失敗しても続行）、成功したラベルのみ使用する
+  const availableLabels = [];
   try {
-    await ensureLabel('daily-metrics', '0075ca', '日次データ取得ワークフローの実行記録');
+    const metricsOk = await ensureLabel('daily-metrics', '0075ca', '日次データ取得ワークフローの実行記録');
+    if (metricsOk) availableLabels.push('daily-metrics');
     if (isFailure) {
-      await ensureLabel('failed', 'd93f0b', 'ワークフロー失敗');
+      const failedOk = await ensureLabel('failed', 'd93f0b', 'ワークフロー失敗');
+      if (failedOk) availableLabels.push('failed');
     }
   } catch (e) {
     console.warn('Label setup error (ignored):', e.message);
@@ -147,17 +128,26 @@ async function main() {
     return;
   }
 
-  // Issue作成
-  const res = await apiRequest('POST', `/repos/${owner}/${repoName}/issues`, {
-    title: issueTitle,
-    body: issueBody,
-    labels,
-  });
+  // Issue作成（ラベルが取得できた場合のみ付与、失敗時はラベル無しで再試行）
+  async function createIssue(withLabels) {
+    const payload = { title: issueTitle, body: issueBody };
+    if (withLabels.length > 0) payload.labels = withLabels;
+    const res = await githubApi(`/repos/${owner}/${repoName}/issues`, 'POST', payload);
+    return res;
+  }
+
+  let res = await createIssue(availableLabels);
+  if (res.status === 422 && availableLabels.length > 0) {
+    console.warn('Issue creation with labels failed (422), retrying without labels.');
+    res = await createIssue([]);
+  }
 
   if (res.status === 201) {
-    console.log(`Issue created: #${res.body.number} "${issueTitle}"`);
+    const body = await res.json();
+    console.log(`Issue created: #${body.number} "${issueTitle}"`);
   } else {
-    console.error(`Failed to create issue (status ${res.status}):`, JSON.stringify(res.body));
+    const text = await res.text();
+    console.error(`Failed to create issue (status ${res.status}):`, text);
     process.exit(1);
   }
 }

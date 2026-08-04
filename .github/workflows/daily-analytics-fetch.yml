@@ -7,7 +7,7 @@ name: Daily Analytics Fetch
 # 週次PR作成運用は2026-08に廃止。取得→合算分析→反映がこのワークフローで完結する。
 #
 # Issue自動記録（2026-08追加）:
-#   全ステップ完了後、実行結果（success/failure）を GitHub Issue として記録する。
+#   全ステップ完了後、実行結果（success/failure/cancelled）を GitHub Issue として記録する。
 #   タイトル: "daily-metrics: YYYY-MM-DD"（失敗時は "(failed)" 付き）
 #   同日Issueが既に存在する場合は作成せずスキップする（重複防止・方針A）。
 
@@ -80,24 +80,14 @@ jobs:
         run: node .github/scripts/aggregate-daily.js
 
       # 実行結果を GitHub Issue として記録する。
-      # 同日Issueが既に存在する場合はスキップ（重複防止・方針A）。
+      # キャンセル含む全ステータスで実行し、同日Issueが既に存在する場合はスキップ（重複防止・方針A）。
       # ラベル daily-metrics を付与し、失敗時はさらに failed ラベルを付与する。
-      - name: Create daily result issue (success)
-        if: success()
+      - name: Create daily result issue
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
-          WORKFLOW_STATUS: success
-          TARGET_DATE: ${{ inputs.target_date }}
-        run: node .github/scripts/create-daily-issue.js
-
-      - name: Create daily result issue (failure)
-        if: failure()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          WORKFLOW_STATUS: failure
+          WORKFLOW_STATUS: ${{ job.status }}
           TARGET_DATE: ${{ inputs.target_date }}
         run: node .github/scripts/create-daily-issue.js
