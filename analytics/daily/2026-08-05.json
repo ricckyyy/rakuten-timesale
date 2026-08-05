@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-05",
+  "fetchedAt": "2026-08-05T12:17:36.696Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      },
+      {
+        "channel": "Unassigned",
+        "sessions": 1
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 0,
+    "ctr": 0,
+    "position": 0,
+    "topQueries": [],
+    "topPages": []
+  }
+}
