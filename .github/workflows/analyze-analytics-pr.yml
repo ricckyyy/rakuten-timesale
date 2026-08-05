@@ -5,8 +5,9 @@ name: Analyze Analytics PR
 # 分析は daily-analytics-fetch.yml が毎日直接 main へコミットする運用に移行しました。
 # 将来復活させる場合は on: ブロックのコメントアウトを外してください。
 on:
-  # pull_request:
-  #   types: [opened]
+  # Workflow disabled: deprecated in 2026-08
+  # Analytics are now handled by daily-analytics-fetch.yml
+  workflow_dispatch: # Manual trigger only (disabled by default)
 
 jobs:
   analyze:
