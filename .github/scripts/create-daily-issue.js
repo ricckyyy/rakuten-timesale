@@ -91,6 +91,9 @@ async function ensureLabel(name, color, description) {
       console.warn(`Label creation failed for "${name}" (status ${create.status}), continuing anyway.`);
       return false;
     }
+  } else if (!res.ok) {
+    console.warn(`Label check failed for "${name}" (status ${res.status}), continuing anyway.`);
+    return false;
   }
   return true;
 }
