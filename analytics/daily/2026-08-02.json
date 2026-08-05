@@ -1,0 +1,31 @@
+{
+  "date": "2026-08-02",
+  "fetchedAt": "2026-08-05T05:16:25.825Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 22,
+    "topQueries": [
+      {
+        "query": "美容 セール",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
