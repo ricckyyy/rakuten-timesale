@@ -1,0 +1,30 @@
+{
+  "date": "2026-08-07",
+  "fetchedAt": "2026-08-10T03:57:26.928Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 6.333333333333333,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/blog/cordless-vacuum-picks",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
