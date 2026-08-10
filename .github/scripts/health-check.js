@@ -127,6 +127,26 @@ async function findExistingIssue() {
   return issues.find((i) => i.title.startsWith(ISSUE_TITLE_PREFIX) && !i.pull_request);
 }
 
+function extractProblemSection(text) {
+  const marker = '## 検知した異常';
+  const start = text.indexOf(marker);
+  if (start === -1) return text.trim();
+  return text.slice(start).trim();
+}
+
+function isSameProblemReport(previousCommentBody, currentBody) {
+  const prev = extractProblemSection(previousCommentBody).replace(/\r\n/g, '\n').trim();
+  const curr = extractProblemSection(currentBody).replace(/\r\n/g, '\n').trim();
+  return prev === curr;
+}
+
+async function findLatestBotComment(issueNumber) {
+  const comments = await githubApi(`/issues/${issueNumber}/comments?per_page=100`);
+  if (!Array.isArray(comments) || comments.length === 0) return null;
+  const botComments = comments.filter((c) => c.user?.login === 'github-actions[bot]');
+  return botComments.length > 0 ? botComments[botComments.length - 1] : null;
+}
+
 async function main() {
   console.log('サイトの疎通・アフィリエイトリンク・空カテゴリ率をチェック中...');
   const pageProblems = await checkPages();
@@ -151,8 +171,14 @@ async function main() {
   const existing = await findExistingIssue();
   if (existing) {
     console.log(`既存のIssue #${existing.number} にコメントを追記します。`);
+    const commentBody = `### ${today}の再検知\n\n${body}`;
+    const latestBotComment = await findLatestBotComment(existing.number);
+    if (latestBotComment && isSameProblemReport(latestBotComment.body, body)) {
+      console.log('前回の自動コメントと検知内容が同一のため、追記をスキップします。');
+      return;
+    }
     await githubApi(`/issues/${existing.number}/comments`, 'POST', {
-      body: `### ${today}の再検知\n\n${body}`,
+      body: commentBody,
     });
     return;
   }
