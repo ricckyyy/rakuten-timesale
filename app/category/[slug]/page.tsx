@@ -69,7 +69,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   // カテゴリIDで商品を取得
-  const products = await fetchRakutenProducts(category.genreId);
+  const categoryProducts = await fetchRakutenProducts(category.genreId);
+  // 楽天APIのタイミング次第でカテゴリ商品が0件になることがあるため、
+  // 空ページ回避のためにカテゴリ名キーワードで再取得する。
+  const fallbackProducts = categoryProducts.length === 0
+    ? await fetchRakutenProducts(undefined, `${category.name} セール`)
+    : [];
+  const products = categoryProducts.length > 0 ? categoryProducts : fallbackProducts;
+  const usedFallback = categoryProducts.length === 0 && fallbackProducts.length > 0;
 
   // このカテゴリに関連するブログ記事を取得
   const relatedPosts = getAllPosts().filter((p) => p.category === slug);
@@ -161,6 +168,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           セール商品一覧
         </h2>
+        {usedFallback && (
+          <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+            このカテゴリの在庫連動セールが少ないため、関連キーワードのセール商品も表示しています。
+          </p>
+        )}
         <SortableProductGrid products={products} />
       </section>
 
