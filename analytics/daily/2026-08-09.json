@@ -1,0 +1,41 @@
+{
+  "date": "2026-08-09",
+  "fetchedAt": "2026-08-12T04:09:13.016Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 7,
+    "ctr": 0,
+    "position": 8,
+    "topQueries": [
+      {
+        "query": "楽天 コスメ セール",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天 デパコス セール",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 6
+      }
+    ]
+  }
+}
