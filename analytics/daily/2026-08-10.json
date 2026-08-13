@@ -1,0 +1,31 @@
+{
+  "date": "2026-08-10",
+  "fetchedAt": "2026-08-13T04:13:27.102Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 7.25,
+    "topQueries": [
+      {
+        "query": "楽天 コスメ セール",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 4
+      }
+    ]
+  }
+}
