@@ -1,0 +1,30 @@
+{
+  "date": "2026-08-12",
+  "fetchedAt": "2026-08-15T02:52:24.595Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 6,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
