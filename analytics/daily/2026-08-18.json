@@ -1,0 +1,40 @@
+{
+  "date": "2026-08-18",
+  "fetchedAt": "2026-08-21T03:03:40.215Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 10,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
