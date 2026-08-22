@@ -117,7 +117,7 @@ export const CATEGORIES: Record<string, Category> = {
   sports: {
     name: 'スポーツ・アウトドア',
     slug: 'sports',
-    genreId: '100526',
+    genreId: '101070',
     description: '楽天市場のスポーツ用品 セール・アウトドア セール情報を毎日更新。ランニングシューズ・ヨガマット・フィットネス器具といったトレーニング用品から、テント・キャンプ用品などのアウトドアギア、自転車用品まで特別価格で登場。運動習慣をもっとお得にスタートしよう！',
     keywords: [
       'スポーツ用品 セール',
