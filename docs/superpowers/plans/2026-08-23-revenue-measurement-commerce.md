@@ -40,7 +40,7 @@
 - Produces: `rankProducts(products: Product[]): Product[]`。入力配列を変更せず、同点時は元の順序を維持する。
 - Produces: `Product.pointRate?: number`、`Product.postageFlag?: 0 | 1`、`Product.affiliateRate?: number`。
 
-- [ ] **Step 1: 楽天レスポンス変換の失敗テストを書く**
+- [x] **Step 1: 楽天レスポンス変換の失敗テストを書く**
 
 `lib/rakuten.test.ts` の成功fixtureへ次を追加する。
 
@@ -60,13 +60,13 @@ affiliateRate: 4.5,
 
 さらに、3フィールドを省略したfixtureが従来どおり商品を返すテストを追加する。
 
-- [ ] **Step 2: 変換テストを実行してREDを確認する**
+- [x] **Step 2: 変換テストを実行してREDを確認する**
 
 Run: `npx tsx --test --test-name-pattern='supported API version|optional commerce fields' lib/rakuten.test.ts`
 
 Expected: 新フィールドが実結果に存在せずFAIL。
 
-- [ ] **Step 3: 商品型と楽天レスポンス型を拡張する**
+- [x] **Step 3: 商品型と楽天レスポンス型を拡張する**
 
 `lib/types.ts` を次の形へ拡張する。
 
@@ -92,13 +92,13 @@ postageFlag: product.postageFlag,
 affiliateRate: product.affiliateRate,
 ```
 
-- [ ] **Step 4: 変換テストを実行してGREENを確認する**
+- [x] **Step 4: 変換テストを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/rakuten.test.ts`
 
 Expected: 全テストPASS。
 
-- [ ] **Step 5: 商品ランキングの失敗テストを書く**
+- [x] **Step 5: 商品ランキングの失敗テストを書く**
 
 `lib/product-ranking.test.ts` を作成する。
 
@@ -155,13 +155,13 @@ test('caps each scoring component', () => {
 });
 ```
 
-- [ ] **Step 6: ランキングテストを実行してREDを確認する**
+- [x] **Step 6: ランキングテストを実行してREDを確認する**
 
 Run: `npx tsx --test lib/product-ranking.test.ts`
 
 Expected: `ERR_MODULE_NOT_FOUND` またはexport未定義でFAIL。
 
-- [ ] **Step 7: 純粋なランキング関数を実装する**
+- [x] **Step 7: 純粋なランキング関数を実装する**
 
 `lib/product-ranking.ts` を作成する。
 
@@ -194,13 +194,13 @@ export function rankProducts(products: Product[]): Product[] {
 }
 ```
 
-- [ ] **Step 8: ランキングテストを実行してGREENを確認する**
+- [x] **Step 8: ランキングテストを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/product-ranking.test.ts`
 
 Expected: 3テストPASS。
 
-- [ ] **Step 9: Task 1をコミットする**
+- [x] **Step 9: Task 1をコミットする**
 
 ```bash
 git add lib/types.ts lib/rakuten.ts lib/rakuten.test.ts lib/product-ranking.ts lib/product-ranking.test.ts
@@ -226,7 +226,7 @@ git commit -m "feat: 購入価値を反映する商品ランキングを追加"
 - Produces: `fetchOptionalBuyerIntentProducts(options: BuyerIntentSearchOptions): Promise<Product[]>`。
 - Keeps: `fetchRakutenProducts(genreId?, keyword?, hits?)` の既存呼び出し互換性。
 
-- [ ] **Step 1: 購入意図検索の失敗テストを書く**
+- [x] **Step 1: 購入意図検索の失敗テストを書く**
 
 `lib/rakuten.test.ts` に、fetchへ渡されたURLを記録するテストを追加する。
 
@@ -253,13 +253,13 @@ test('fetches buyer-intent products by sale keyword and review count', { concurr
 - 最初がHTTP 502なら2回目を呼ばず `RakutenApiError` をthrowする。
 - keywordだけのブログ検索では0件でもgenreIdフォールバックしない。
 
-- [ ] **Step 2: 購入意図検索テストを実行してREDを確認する**
+- [x] **Step 2: 購入意図検索テストを実行してREDを確認する**
 
 Run: `npx tsx --test --test-name-pattern='buyer-intent' lib/rakuten.test.ts`
 
 Expected: 関数未定義またはsortが`standard`でFAIL。
 
-- [ ] **Step 3: リクエストoptionsと購入意図関数を実装する**
+- [x] **Step 3: リクエストoptionsと購入意図関数を実装する**
 
 `lib/rakuten.ts` に追加する。
 
@@ -319,13 +319,13 @@ export async function fetchOptionalBuyerIntentProducts(
 }
 ```
 
-- [ ] **Step 4: 購入意図検索テストを実行してGREENを確認する**
+- [x] **Step 4: 購入意図検索テストを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/rakuten.test.ts lib/product-ranking.test.ts`
 
 Expected: 全テストPASS。
 
-- [ ] **Step 5: 商品ページの呼び出しを購入意図関数へ移行する**
+- [x] **Step 5: 商品ページの呼び出しを購入意図関数へ移行する**
 
 呼び出しは次の値へ統一する。
 
@@ -343,13 +343,13 @@ fetchOptionalBuyerIntentProducts({ keyword, hits })
 fetchOptionalBuyerIntentProducts({ keyword, hits: 4 })
 ```
 
-- [ ] **Step 6: 全商品取得テストとproduction buildを実行する**
+- [x] **Step 6: 全商品取得テストとproduction buildを実行する**
 
 Run: `npm test && npm run build`
 
 Expected: テストPASS。build結果で `/`、`/category/[slug]`、`/blog/[slug]` はDynamicのまま。
 
-- [ ] **Step 7: Task 2をコミットする**
+- [x] **Step 7: Task 2をコミットする**
 
 ```bash
 git add lib/rakuten.ts lib/rakuten.test.ts app/page.tsx 'app/category/[slug]/page.tsx' 'app/blog/[slug]/page.tsx' components/ProductSection.tsx
@@ -380,7 +380,7 @@ git commit -m "feat: 購入意図に合わせて楽天商品を取得"
 - Produces: `<AffiliateDisclosure className?: string />`。
 - Extends: `<ProductCard product listName? position? />`。
 
-- [ ] **Step 1: クリックイベントの失敗テストを書く**
+- [x] **Step 1: クリックイベントの失敗テストを書く**
 
 `lib/analytics.test.ts` を作成する。
 
@@ -412,7 +412,7 @@ test('builds an affiliate click event without URLs or credentials', () => {
 });
 ```
 
-- [ ] **Step 2: バッジ判定の失敗テストを書く**
+- [x] **Step 2: バッジ判定の失敗テストを書く**
 
 `lib/product-display.test.ts` を作成する。
 
@@ -433,13 +433,13 @@ test('omits default point rate and unknown shipping', () => {
 
 テスト内の `product()` はTask 1と同じ必須フィールドを返すローカルfixtureにする。
 
-- [ ] **Step 3: 純粋関数テストを実行してREDを確認する**
+- [x] **Step 3: 純粋関数テストを実行してREDを確認する**
 
 Run: `npx tsx --test lib/analytics.test.ts lib/product-display.test.ts`
 
 Expected: module未作成でFAIL。
 
-- [ ] **Step 4: クリックイベントとバッジ関数を実装する**
+- [x] **Step 4: クリックイベントとバッジ関数を実装する**
 
 `lib/analytics.ts`:
 
@@ -486,13 +486,13 @@ export function getProductBadges(product: Product): string[] {
 }
 ```
 
-- [ ] **Step 5: 純粋関数テストを実行してGREENを確認する**
+- [x] **Step 5: 純粋関数テストを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/analytics.test.ts lib/product-display.test.ts`
 
 Expected: 全テストPASS。
 
-- [ ] **Step 6: 広告開示コンポーネントを実装する**
+- [x] **Step 6: 広告開示コンポーネントを実装する**
 
 `components/AffiliateDisclosure.tsx`:
 
@@ -507,7 +507,7 @@ export default function AffiliateDisclosure({ className = '' }: { className?: st
 }
 ```
 
-- [ ] **Step 7: ProductCardへイベント、バッジ、CTAを実装する**
+- [x] **Step 7: ProductCardへイベント、バッジ、CTAを実装する**
 
 propsを拡張する。
 
@@ -543,7 +543,7 @@ w.dataLayer.push({ event: 'affiliate_click', ...event });
 </span>
 ```
 
-- [ ] **Step 8: listName、position、広告開示を全配置へ渡す**
+- [x] **Step 8: listName、position、広告開示を全配置へ渡す**
 
 配置ルール:
 
@@ -554,13 +554,13 @@ w.dataLayer.push({ event: 'affiliate_click', ...event });
 - Blog本文: `<header>` の直後、MDX本文より前に開示。
 - Blog関連商品: 見出しとグリッドの間に開示し、`listName={`related-${slug}`}` を渡す。
 
-- [ ] **Step 9: UI変更後の全テスト、lint、buildを実行する**
+- [x] **Step 9: UI変更後の全テスト、lint、buildを実行する**
 
 Run: `npm test && npm run lint && npm run build`
 
 Expected: テストPASS、lintエラー0、build成功。
 
-- [ ] **Step 10: Task 3をコミットする**
+- [x] **Step 10: Task 3をコミットする**
 
 ```bash
 git add lib/analytics.ts lib/analytics.test.ts lib/product-display.ts lib/product-display.test.ts components/AffiliateDisclosure.tsx components/ProductCard.tsx components/SortableProductGrid.tsx components/ProductSection.tsx app/page.tsx 'app/category/[slug]/page.tsx' 'app/blog/[slug]/page.tsx'
@@ -585,7 +585,7 @@ git commit -m "feat: 楽天クリック計測と購入CTAを追加"
 - Extends: 日次 `ga4.affiliateClickPages: Array<{page: string; clicks: number}>`。
 - Extends: `aggregateGA4(records)` の返却値に同じ週次集計と `affiliateCtr`。
 
-- [ ] **Step 1: GA4リクエストbuilderの失敗テストを書く**
+- [x] **Step 1: GA4リクエストbuilderの失敗テストを書く**
 
 `.github/scripts/analytics-core.test.js`:
 
@@ -619,13 +619,13 @@ test('adds pagePath and ordering for affiliate click pages', () => {
 });
 ```
 
-- [ ] **Step 2: builderテストを実行してREDを確認する**
+- [x] **Step 2: builderテストを実行してREDを確認する**
 
 Run: `node --test .github/scripts/analytics-core.test.js`
 
 Expected: module未作成でFAIL。
 
-- [ ] **Step 3: GA4リクエストbuilderを実装する**
+- [x] **Step 3: GA4リクエストbuilderを実装する**
 
 `.github/scripts/analytics-core.js` を作成し、共通filterを複製せず返す。
 
@@ -662,13 +662,13 @@ function buildAffiliatePagesRequest(date) {
 module.exports = { buildAffiliateOverviewRequest, buildAffiliatePagesRequest };
 ```
 
-- [ ] **Step 4: builderテストを実行してGREENを確認する**
+- [x] **Step 4: builderテストを実行してGREENを確認する**
 
 Run: `node --test .github/scripts/analytics-core.test.js`
 
 Expected: 2テストPASS。
 
-- [ ] **Step 5: 日次GA4取得へ楽天クリックを追加する**
+- [x] **Step 5: 日次GA4取得へ楽天クリックを追加する**
 
 `fetchGA4Data` の `Promise.all` に2つの `runReport` を追加し、builderの返却値を `requestBody` に渡す。返却値へ追加する。
 
@@ -692,7 +692,7 @@ return {
 };
 ```
 
-- [ ] **Step 6: 週次集計の失敗テストを書く**
+- [x] **Step 6: 週次集計の失敗テストを書く**
 
 `.github/scripts/aggregate-weekly.test.js`:
 
@@ -730,13 +730,13 @@ test('formats zero-session affiliate CTR without NaN or Infinity', () => {
 });
 ```
 
-- [ ] **Step 7: 週次集計テストを実行してREDを確認する**
+- [x] **Step 7: 週次集計テストを実行してREDを確認する**
 
 Run: `node --test .github/scripts/aggregate-weekly.test.js`
 
 Expected: `affiliateClicks` またはレポート行がなくFAIL。
 
-- [ ] **Step 8: 週次集計とレポートを拡張する**
+- [x] **Step 8: 週次集計とレポートを拡張する**
 
 `aggregateGA4` で欠落フィールドを0・空配列として合算する。
 
@@ -757,13 +757,13 @@ const affiliateCtr = sessions > 0 ? affiliateClicks / sessions : 0;
 
 流入チャネルの後に `### 楽天クリックページ TOP10` 表を追加する。
 
-- [ ] **Step 9: Analytics全テストを実行してGREENを確認する**
+- [x] **Step 9: Analytics全テストを実行してGREENを確認する**
 
 Run: `node --test .github/scripts/analytics-core.test.js .github/scripts/aggregate-weekly.test.js`
 
 Expected: 全テストPASS。
 
-- [ ] **Step 10: Task 4をコミットする**
+- [x] **Step 10: Task 4をコミットする**
 
 ```bash
 git add .github/scripts/analytics-core.js .github/scripts/analytics-core.test.js .github/scripts/aggregate-weekly.test.js .github/scripts/fetch-analytics-daily.js .github/scripts/aggregate-weekly.js
@@ -781,25 +781,25 @@ git commit -m "feat: 楽天クリックを日次週次レポートへ追加"
 - Consumes: Task 1〜4の全成果物。
 - Produces: コンテンツ計画を安全に開始できるgreen baseline。
 
-- [ ] **Step 1: 全テストを実行する**
+- [x] **Step 1: 全テストを実行する**
 
 Run: `npm test`
 
 Expected: 全テストPASS。
 
-- [ ] **Step 2: lintを実行する**
+- [x] **Step 2: lintを実行する**
 
 Run: `npm run lint`
 
 Expected: エラー0。既存の未使用変数警告3件以外に新規警告がない。
 
-- [ ] **Step 3: production buildを実行する**
+- [x] **Step 3: production buildを実行する**
 
 Run: `npm run build`
 
 Expected: build成功。商品を持つ3ルートがDynamicのまま。
 
-- [ ] **Step 4: 差分と機密情報を確認する**
+- [x] **Step 4: 差分と機密情報を確認する**
 
 Run: `git diff --check && git status --short`
 
@@ -811,7 +811,7 @@ Run: `git diff --check && git status --short`
 - 既存analytics生成物を変更していない。
 - 料率がUIに表示されていない。
 
-- [ ] **Step 5: 計画チェックボックスを更新してコミットする**
+- [x] **Step 5: 計画チェックボックスを更新してコミットする**
 
 ```bash
 git add docs/superpowers/plans/2026-08-23-revenue-measurement-commerce.md
