@@ -76,7 +76,10 @@ test('fetches and transforms products through the supported API version', { conc
 test('throws a sanitized RakutenApiError for an upstream API error', { concurrency: false }, async () => {
   globalThis.fetch = async () =>
     jsonResponse(
-      { error: 'wrong_parameter', error_description: 'API Configuration not found' },
+      {
+        error: 'wrong_parameter-access-secret',
+        error_description: 'invalid app-secret access-secret affiliate-secret',
+      },
       400,
     );
 
@@ -86,12 +89,19 @@ test('throws a sanitized RakutenApiError for an upstream API error', { concurren
       assert.ok(error instanceof Error);
       assert.equal(error.name, 'RakutenApiError');
       assert.equal((error as Error & { status?: number }).status, 400);
-      assert.equal((error as Error & { code?: string }).code, 'wrong_parameter');
+      assert.equal((error as Error & { code?: string }).code, 'wrong_parameter-[REDACTED]');
       assert.equal(
         (error as Error & { description?: string }).description,
-        'API Configuration not found',
+        'invalid [REDACTED] [REDACTED] [REDACTED]',
       );
-      assert.doesNotMatch(error.message, /app-secret|access-secret|affiliate-secret/);
+      assert.doesNotMatch(
+        JSON.stringify({
+          message: error.message,
+          code: (error as Error & { code?: string }).code,
+          description: (error as Error & { description?: string }).description,
+        }),
+        /app-secret|access-secret|affiliate-secret/,
+      );
       return true;
     },
   );
@@ -155,10 +165,16 @@ test('keeps a successful empty result as an empty product array', { concurrency:
 
 test('retries once after an upstream rate limit response', { concurrency: false }, async () => {
   let attempts = 0;
-  globalThis.fetch = async () => {
+  let memoizedResponse: Response | undefined;
+  globalThis.fetch = async (_input, options) => {
+    if (!options?.signal && memoizedResponse) {
+      return memoizedResponse;
+    }
+
     attempts += 1;
     if (attempts === 1) {
-      return jsonResponse({ error: 'too_many_requests' }, 429);
+      memoizedResponse = jsonResponse({ error: 'too_many_requests' }, 429);
+      return memoizedResponse;
     }
     return jsonResponse({ count: 0, pageCount: 0, Items: [] });
   };

@@ -19,6 +19,20 @@ test('reports the public API status when the Rakuten search route returns 502', 
   ]);
 });
 
+test('keeps the HTTP status when an upstream gateway returns non-JSON', async () => {
+  const fetchImpl = async () =>
+    new Response('<html>Service Unavailable</html>', {
+      status: 503,
+      headers: { 'Content-Type': 'text/html' },
+    });
+
+  const problems = await checkRakutenApi(fetchImpl, 'https://example.com');
+
+  assert.deepEqual(problems, [
+    '- 楽天商品APIのヘルスチェックに失敗しました: HTTP 503',
+  ]);
+});
+
 test('accepts a successful Rakuten search response containing a product', async () => {
   const fetchImpl = async () =>
     jsonResponse({

@@ -74,11 +74,18 @@ export async function fetchRakutenProducts(
   // 429の場合は1秒待ってリトライ
   if (response.status === 429) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    response = await requestRakutenApi(url, fetchOptions);
+    // Server Componentの同一GETメモ化を避けつつ、成功時の1時間Data Cacheは維持する。
+    response = await requestRakutenApi(url, {
+      ...fetchOptions,
+      signal: new AbortController().signal,
+    });
   }
 
   if (!response.ok) {
-    const errorPayload = await readErrorPayload(response);
+    const errorPayload = await readErrorPayload(
+      response,
+      [appId, accessKey, affiliateId].filter((value): value is string => Boolean(value)),
+    );
     throw new RakutenApiError(
       response.status,
       errorPayload?.error,
@@ -158,17 +165,38 @@ async function requestRakutenApi(
   }
 }
 
-async function readErrorPayload(response: Response): Promise<RakutenApiErrorPayload | undefined> {
+async function readErrorPayload(
+  response: Response,
+  credentials: string[],
+): Promise<RakutenApiErrorPayload | undefined> {
   try {
     const payload = (await response.json()) as RakutenApiErrorPayload;
     return {
-      error: typeof payload.error === 'string' ? payload.error : undefined,
+      error:
+        typeof payload.error === 'string'
+          ? redactCredentials(payload.error, credentials)
+          : undefined,
       error_description:
-        typeof payload.error_description === 'string' ? payload.error_description : undefined,
+        typeof payload.error_description === 'string'
+          ? redactCredentials(payload.error_description, credentials)
+          : undefined,
     };
   } catch {
     return undefined;
   }
+}
+
+function redactCredentials(value: string, credentials: string[]): string {
+  const variants = new Set(
+    credentials.flatMap((credential) => [credential, encodeURIComponent(credential)]),
+  );
+
+  return [...variants]
+    .sort((left, right) => right.length - left.length)
+    .reduce(
+      (sanitized, credential) => sanitized.split(credential).join('[REDACTED]'),
+      value,
+    );
 }
 
 // 価格フォーマット関数

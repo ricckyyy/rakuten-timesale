@@ -9,18 +9,24 @@ async function checkRakutenApi(fetchImpl = fetch, siteUrl = 'https://rakuten-tim
     return ['- 楽天商品APIへの接続に失敗しました。'];
   }
 
+  if (!response.ok) {
+    let errorCode = '';
+    try {
+      const payload = await response.json();
+      errorCode = typeof payload?.error === 'string' ? ` (${payload.error})` : '';
+    } catch {
+      // VercelなどのゲートウェイがHTMLを返してもHTTPステータスは診断に残す。
+    }
+    return [
+      `- 楽天商品APIのヘルスチェックに失敗しました: HTTP ${response.status}${errorCode}`,
+    ];
+  }
+
   let payload;
   try {
     payload = await response.json();
   } catch {
     return ['- 楽天商品APIの応答形式が不正です。'];
-  }
-
-  if (!response.ok) {
-    const errorCode = typeof payload?.error === 'string' ? ` (${payload.error})` : '';
-    return [
-      `- 楽天商品APIのヘルスチェックに失敗しました: HTTP ${response.status}${errorCode}`,
-    ];
   }
 
   if (!Array.isArray(payload?.items)) {
