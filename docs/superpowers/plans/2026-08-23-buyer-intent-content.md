@@ -576,7 +576,7 @@ git commit -m "docs: ゼロ予算収益化の評価基準を記録"
 - Consumes: 両実装計画の全成果物。
 - Produces: mainへマージ可能な収益化改善と本番証跡。
 
-- [ ] **Step 1: 全ローカル検証を実行する**
+- [x] **Step 1: 全ローカル検証を実行する**
 
 Run in order:
 
@@ -589,7 +589,7 @@ git diff --check
 
 Expected: 全テストPASS、lintエラー0、build成功、差分エラーなし。
 
-- [ ] **Step 2: 制約と差分をセルフレビューする**
+- [x] **Step 2: 制約と差分をセルフレビューする**
 
 確認項目:
 
@@ -600,11 +600,11 @@ Expected: 全テストPASS、lintエラー0、build成功、差分エラーな�
 - 未確認の開催日・体験・効果を断定していない。
 - 最初の商品リンクより前に広告開示がある。
 
-- [ ] **Step 3: 独立コードレビューを依頼する**
+- [x] **Step 3: 独立コードレビューを依頼する**
 
 Baseは実装開始時の `origin/main`、Headは現在のHEADとする。レビュー対象に仕様書と2本の計画を渡し、Critical/Important指摘を修正して全検証を再実行する。
 
-- [ ] **Step 4: ブランチをpushしてPRを作成する**
+- [x] **Step 4: ブランチをpushしてPRを作成する**
 
 PR本文へ次を含める。
 
@@ -615,7 +615,7 @@ PR本文へ次を含める。
 - 30日評価指標と累計楽天クリック50件目標
 - 初売上後70%再投資ルール
 
-- [ ] **Step 5: Previewを確認する**
+- [x] **Step 5: Previewを確認する**
 
 確認対象:
 
@@ -631,15 +631,15 @@ PR本文へ次を含める。
 
 全ページでHTTP 200、空表示なし、広告開示が最初の楽天リンクより前、商品バッジ・CTA・`hb.afl.rakuten.co.jp` リンクが存在することを確認する。
 
-- [ ] **Step 6: PRをマージしてProductionを確認する**
+- [x] **Step 6: PRをマージしてProductionを確認する**
 
 Vercel ProductionがReadyになった後、`/api/revalidate` を実行し、Previewと同じ対象を確認する。ブラウザで商品リンクを1回テストし、GA4 RealtimeまたはDebugViewを利用できる場合は `affiliate_click` を確認する。利用できない場合はブラウザの`dataLayer`へイベントが入ることを確認し、日次レポートで翌日以降に再確認する。
 
-- [ ] **Step 7: Issue #47または収益化追跡Issueへ証跡を記録する**
+- [x] **Step 7: Issue #47または収益化追跡Issueへ証跡を記録する**
 
 PR、本番deployment、ページ検証、ベースライン、30日再評価日、SNSなし・投資0円、初売上後の再投資ルールをコメントする。売上や被リンクが未発生なら完了扱いにしない。
 
-- [ ] **Step 8: 計画チェックボックスを更新してコミットする**
+- [x] **Step 8: 計画チェックボックスを更新してコミットする**
 
 ```bash
 git add docs/superpowers/plans/2026-08-23-buyer-intent-content.md
