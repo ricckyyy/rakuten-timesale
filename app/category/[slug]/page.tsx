@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { fetchBuyerIntentProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 import { getAllPosts } from '@/lib/blog';
 import { CATEGORIES, CATEGORY_FAQ, SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
@@ -165,7 +166,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           セール商品一覧
         </h2>
-        <SortableProductGrid products={products} />
+        <AffiliateDisclosure className="mb-4" />
+        <SortableProductGrid products={products} listName={`${slug}-sale-products`} />
       </section>
 
       {/* カテゴリ説明 */}

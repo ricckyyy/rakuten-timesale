@@ -7,6 +7,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 import type { Metadata } from 'next';
 
 // 記事本文は毎回サーバー描画し、任意の商品データだけをAPIクライアント側でキャッシュする。
@@ -145,6 +146,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </header>
 
+        <AffiliateDisclosure className="mb-8" />
         <div className="blog-content">
           <MDXRemote source={post.content} components={{ ProductSection }} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
@@ -156,9 +158,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             📦 この記事に関連するセール商品
           </h2>
+          <AffiliateDisclosure className="mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {relatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {relatedProducts.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                listName={`related-${slug}`}
+                position={index}
+              />
             ))}
           </div>
           {CATEGORIES[post.category] && (

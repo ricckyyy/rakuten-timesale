@@ -3,6 +3,7 @@ import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
 import { getAllPosts } from '@/lib/blog';
 import Link from 'next/link';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 
 // 外部APIをビルド時に集中呼び出ししない。商品データ自体はlib/rakuten.tsで1時間キャッシュする。
 export const revalidate = 0;
@@ -125,7 +126,8 @@ export default async function Home() {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           おすすめセール商品
         </h2>
-        <SortableProductGrid products={products} />
+        <AffiliateDisclosure className="mb-4" />
+        <SortableProductGrid products={products} listName="home-sale-products" />
       </section>
 
       {/* ブログ・お買い物ガイド */}

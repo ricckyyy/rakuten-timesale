@@ -25,7 +25,13 @@ function sortProducts(products: Product[], key: SortKey): Product[] {
   }
 }
 
-export default function SortableProductGrid({ products }: { products: Product[] }) {
+export default function SortableProductGrid({
+  products,
+  listName,
+}: {
+  products: Product[];
+  listName?: string;
+}) {
   const [sortKey, setSortKey] = useState<SortKey>('default');
   const sorted = sortProducts(products, sortKey);
 
@@ -55,8 +61,13 @@ export default function SortableProductGrid({ products }: { products: Product[] 
         ))}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {sorted.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {sorted.map((product, index) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            listName={listName}
+            position={index}
+          />
         ))}
       </div>
     </div>
