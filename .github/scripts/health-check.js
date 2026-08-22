@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { checkRakutenApi } = require('./health-check-core');
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPOSITORY;
@@ -128,6 +129,9 @@ async function findExistingIssue() {
 }
 
 async function main() {
+  console.log('楽天商品APIをチェック中...');
+  const apiProblems = await checkRakutenApi(fetch, SITE_URL);
+
   console.log('サイトの疎通・アフィリエイトリンク・空カテゴリ率をチェック中...');
   const pageProblems = await checkPages();
 
@@ -137,7 +141,7 @@ async function main() {
   console.log('マイルストーン期限をチェック中...');
   const milestoneProblems = checkOverdueMilestones();
 
-  const allProblems = [...pageProblems, ...prProblems, ...milestoneProblems];
+  const allProblems = [...apiProblems, ...pageProblems, ...prProblems, ...milestoneProblems];
 
   if (allProblems.length === 0) {
     console.log('異常なし。');

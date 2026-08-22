@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/blog';
-import { fetchRakutenProducts } from '@/lib/rakuten';
+import { fetchOptionalRakutenProducts } from '@/lib/rakuten';
 import { CATEGORIES, SITE_INFO } from '@/lib/constants';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
@@ -9,7 +9,8 @@ import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
 import type { Metadata } from 'next';
 
-export const revalidate = 86400;
+// 記事本文は毎回サーバー描画し、任意の商品データだけをAPIクライアント側でキャッシュする。
+export const revalidate = 0;
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -68,7 +69,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // 記事のtagsをキーワードにして関連商品を取得
   const keyword = post.tags[0] ?? post.title;
-  const relatedProducts = await fetchRakutenProducts(undefined, keyword, 4);
+  const relatedProducts = await fetchOptionalRakutenProducts(undefined, keyword, 4);
   const relatedPosts = getRelatedPosts(post, 3);
 
   const url = `${SITE_INFO.url}/blog/${slug}`;
