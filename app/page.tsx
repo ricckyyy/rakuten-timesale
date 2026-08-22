@@ -1,16 +1,17 @@
-import { fetchRakutenProducts } from '@/lib/rakuten';
+import { fetchBuyerIntentProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
-import { getAllPosts } from '@/lib/blog';
+import { getFeaturedPosts } from '@/lib/blog';
 import Link from 'next/link';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 
 // 外部APIをビルド時に集中呼び出ししない。商品データ自体はlib/rakuten.tsで1時間キャッシュする。
 export const revalidate = 0;
 
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）
-  const products = await fetchRakutenProducts(undefined, 'セール', 30);
-  const recentPosts = getAllPosts().slice(0, 3);
+  const products = await fetchBuyerIntentProducts({ keyword: 'セール', hits: 30 });
+  const recentPosts = getFeaturedPosts(3);
 
   const today = new Date().toLocaleDateString('ja-JP', {
     year: 'numeric',
@@ -125,7 +126,8 @@ export default async function Home() {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           おすすめセール商品
         </h2>
-        <SortableProductGrid products={products} />
+        <AffiliateDisclosure className="mb-4" />
+        <SortableProductGrid products={products} listName="home-sale-products" />
       </section>
 
       {/* ブログ・お買い物ガイド */}
@@ -156,6 +158,12 @@ export default async function Home() {
                     </span>
                   )}
                 </div>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-3 block text-sm font-medium text-red-600 dark:text-red-400 hover:underline"
+                >
+                  {post.cta ?? '記事を読む'}
+                </Link>
               </article>
             ))}
           </div>

@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/blog';
-import { fetchOptionalRakutenProducts } from '@/lib/rakuten';
+import { fetchOptionalBuyerIntentProducts } from '@/lib/rakuten';
 import { CATEGORIES, SITE_INFO } from '@/lib/constants';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import ProductCard from '@/components/ProductCard';
 import ProductSection from '@/components/ProductSection';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 import type { Metadata } from 'next';
 
 // 記事本文は毎回サーバー描画し、任意の商品データだけをAPIクライアント側でキャッシュする。
@@ -69,7 +70,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // 記事のtagsをキーワードにして関連商品を取得
   const keyword = post.tags[0] ?? post.title;
-  const relatedProducts = await fetchOptionalRakutenProducts(undefined, keyword, 4);
+  const relatedProducts = await fetchOptionalBuyerIntentProducts({ keyword, hits: 4 });
   const relatedPosts = getRelatedPosts(post, 3);
 
   const url = `${SITE_INFO.url}/blog/${slug}`;
@@ -145,6 +146,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </header>
 
+        <AffiliateDisclosure className="mb-8" />
         <div className="blog-content">
           <MDXRemote source={post.content} components={{ ProductSection }} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
@@ -156,9 +158,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             📦 この記事に関連するセール商品
           </h2>
+          <AffiliateDisclosure className="mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {relatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {relatedProducts.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                listName={`related-${slug}`}
+                position={index}
+              />
             ))}
           </div>
           {CATEGORIES[post.category] && (

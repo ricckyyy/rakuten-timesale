@@ -13,10 +13,17 @@ export interface BlogPost {
   category: string;
   tags: string[];
   image?: string;
+  cta?: string;
   content: string;
 }
 
-function parsePost(slug: string, raw: string): BlogPost {
+export const FEATURED_POST_SLUGS = [
+  'drugstore-serum-picks',
+  'rakuten-sale-calendar-2026',
+  'rakuten-super-sale-guide',
+] as const;
+
+export function parsePost(slug: string, raw: string): BlogPost {
   const { data, content } = matter(raw);
   return {
     slug,
@@ -27,6 +34,7 @@ function parsePost(slug: string, raw: string): BlogPost {
     category: data.category as string,
     tags: (data.tags as string[]) || [],
     image: (data.image as string | undefined) || undefined,
+    cta: (data.cta as string | undefined) || undefined,
     content,
   };
 }
@@ -49,6 +57,20 @@ export function getPostBySlug(slug: string): BlogPost | null {
 
   const raw = fs.readFileSync(filePath, 'utf-8');
   return parsePost(slug, raw);
+}
+
+export function selectFeaturedPosts(all: BlogPost[], limit = 3): BlogPost[] {
+  const bySlug = new Map(all.map((post) => [post.slug, post]));
+  const featured = FEATURED_POST_SLUGS
+    .map((slug) => bySlug.get(slug))
+    .filter((post): post is BlogPost => Boolean(post));
+  const featuredSet = new Set(featured.map((post) => post.slug));
+
+  return [...featured, ...all.filter((post) => !featuredSet.has(post.slug))].slice(0, limit);
+}
+
+export function getFeaturedPosts(limit = 3): BlogPost[] {
+  return selectFeaturedPosts(getAllPosts(), limit);
 }
 
 export function getRelatedPosts(current: BlogPost, limit = 3): BlogPost[] {

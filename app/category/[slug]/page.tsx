@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { fetchRakutenProducts } from '@/lib/rakuten';
+import { fetchBuyerIntentProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 import { getAllPosts } from '@/lib/blog';
 import { CATEGORIES, CATEGORY_FAQ, SITE_INFO } from '@/lib/constants';
 import type { Metadata } from 'next';
@@ -69,7 +70,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   // カテゴリIDで商品を取得
-  const products = await fetchRakutenProducts(category.genreId);
+  const products = await fetchBuyerIntentProducts({
+    genreId: category.genreId,
+    keyword: 'セール',
+    hits: 30,
+  });
 
   // このカテゴリに関連するブログ記事を取得
   const relatedPosts = getAllPosts().filter((p) => p.category === slug);
@@ -161,7 +166,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           セール商品一覧
         </h2>
-        <SortableProductGrid products={products} />
+        <AffiliateDisclosure className="mb-4" />
+        <SortableProductGrid products={products} listName={`${slug}-sale-products`} />
       </section>
 
       {/* カテゴリ説明 */}
@@ -216,7 +222,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 className="block border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-red-400 dark:hover:border-red-500 hover:shadow-md transition-all"
               >
                 <p className="font-semibold text-gray-800 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 mb-1">
-                  {post.title}
+                  {post.cta ?? post.title} →
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{post.description}</p>
               </Link>

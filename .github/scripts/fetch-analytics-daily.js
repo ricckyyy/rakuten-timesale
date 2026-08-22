@@ -1,5 +1,9 @@
 const { google } = require('googleapis');
 const fs = require('fs');
+const {
+  buildAffiliateOverviewRequest,
+  buildAffiliatePagesRequest,
+} = require('./analytics-core');
 
 const SA_KEY = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
 const GA4_PROPERTY_ID = process.env.GA4_PROPERTY_ID;
@@ -60,7 +64,7 @@ function getTargetDates() {
 async function fetchGA4Data(authClient, date) {
   const analyticsdata = google.analyticsdata({ version: 'v1beta', auth: authClient });
 
-  const [overview, topPages, sources] = await Promise.all([
+  const [overview, topPages, sources, affiliateOverview, affiliatePages] = await Promise.all([
     analyticsdata.properties.runReport({
       property: `properties/${GA4_PROPERTY_ID}`,
       requestBody: {
@@ -92,6 +96,14 @@ async function fetchGA4Data(authClient, date) {
         limit: 5,
       },
     }),
+    analyticsdata.properties.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      requestBody: buildAffiliateOverviewRequest(date),
+    }),
+    analyticsdata.properties.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      requestBody: buildAffiliatePagesRequest(date),
+    }),
   ]);
 
   const row = overview.data.rows?.[0]?.metricValues || [];
@@ -107,6 +119,13 @@ async function fetchGA4Data(authClient, date) {
     sources: (sources.data.rows || []).map((r) => ({
       channel: r.dimensionValues[0].value,
       sessions: Number(r.metricValues[0].value),
+    })),
+    affiliateClicks: Number(
+      affiliateOverview.data.rows?.[0]?.metricValues?.[0]?.value || 0
+    ),
+    affiliateClickPages: (affiliatePages.data.rows || []).map((r) => ({
+      page: r.dimensionValues[0].value,
+      clicks: Number(r.metricValues[0].value),
     })),
   };
 }

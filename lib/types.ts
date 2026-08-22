@@ -10,6 +10,9 @@ export interface Product {
   category: string;
   rating?: number;
   reviewCount?: number;
+  pointRate?: number;
+  postageFlag?: 0 | 1; // 楽天API出力: 0=送料込み、1=送料別
+  affiliateRate?: number;
 }
 
 // カテゴリ型
@@ -37,6 +40,9 @@ export interface RakutenApiResponse {
       reviewAverage?: number;
       reviewCount?: number;
       affiliateUrl?: string;
+      pointRate?: number;
+      postageFlag?: 0 | 1; // 楽天API出力: 0=送料込み、1=送料別
+      affiliateRate?: number;
     };
   }>;
   pageCount?: number;
