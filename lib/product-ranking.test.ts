@@ -21,7 +21,7 @@ test('ranks user value above affiliate rate alone', () => {
     reviewCount: 1000,
     discount: 30,
     pointRate: 5,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 1,
   });
   const highCommission = product('commission', { affiliateRate: 10 });
@@ -43,8 +43,17 @@ test('caps each scoring component', () => {
     reviewCount: 1_000_000,
     discount: 100,
     pointRate: 50,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 99,
   }));
   assert.equal(score, 100);
+});
+
+test('awards shipping value only when Rakuten reports postage included', () => {
+  const included = scoreProduct(product('included', { postageFlag: 0 }));
+  const notIncluded = scoreProduct(product('not-included', { postageFlag: 1 }));
+  const unknown = scoreProduct(product('unknown'));
+
+  assert.equal(included, unknown + 10);
+  assert.equal(notIncluded, unknown);
 });

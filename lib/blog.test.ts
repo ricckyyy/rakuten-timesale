@@ -28,6 +28,19 @@ Body`);
   assert.equal(post.cta, '肌悩み別に美容液を選ぶ');
 });
 
+test('leaves the buyer-intent CTA absent when frontmatter omits it', () => {
+  const post = parsePost('sample', `---
+title: Sample
+description: Description
+date: "2026-08-23"
+category: beauty
+tags: ["美容"]
+---
+Body`);
+
+  assert.equal(post.cta, undefined);
+});
+
 test('selects revenue-priority posts before recent fallback posts', () => {
   assert.deepEqual(getFeaturedPosts(3).map((post) => post.slug), [
     'drugstore-serum-picks',

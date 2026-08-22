@@ -18,12 +18,13 @@ function product(overrides: Partial<Product> = {}): Product {
 test('returns only user-facing purchase benefit badges', () => {
   const badges = getProductBadges(product({
     pointRate: 5,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 10,
   }));
   assert.deepEqual(badges, ['ポイント5倍', '送料無料']);
 });
 
-test('omits default point rate and unknown shipping', () => {
+test('omits default point rate, postage not included, and unknown shipping', () => {
+  assert.deepEqual(getProductBadges(product({ pointRate: 1, postageFlag: 1 })), []);
   assert.deepEqual(getProductBadges(product({ pointRate: 1 })), []);
 });

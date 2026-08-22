@@ -12,7 +12,7 @@ export function scoreProduct(product: Product): number {
   const pointScore = (product.pointRate ?? 0) > 1
     ? clamp(product.pointRate ?? 0, 0, 10) / 10 * 10
     : 0;
-  const postageScore = product.postageFlag === 1 ? 10 : 0;
+  const postageScore = product.postageFlag === 0 ? 10 : 0;
   const affiliateScore = clamp(product.affiliateRate ?? 0, 0, 10) / 10 * 5;
   return reviewCountScore + ratingScore + discountScore + pointScore
     + postageScore + affiliateScore;

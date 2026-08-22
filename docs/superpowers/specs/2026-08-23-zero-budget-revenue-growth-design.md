@@ -117,6 +117,7 @@ interface Product {
 ```
 
 APIレスポンス型にも同じフィールドを追加する。未返却の場合は `undefined` のまま扱い、既存表示を壊さない。
+楽天API出力の送料フラグは `0 = 送料込み`、`1 = 送料別` とし、`undefined` は不明として加点・表示しない。
 
 ### 6.1 取得条件
 
@@ -150,7 +151,7 @@ reviewCountScore = min(log10(reviewCount + 1) / 4, 1) * 40
 ratingScore      = clamp(rating / 5, 0, 1) * 20
 discountScore    = min(discount, 50) / 50 * 15
 pointScore       = pointRate > 1 ? min(pointRate, 10) / 10 * 10 : 0
-postageScore     = postageFlag === 1 ? 10 : 0
+postageScore     = postageFlag === 0 ? 10 : 0
 affiliateScore   = min(affiliateRate, 10) / 10 * 5
 ```
 
@@ -164,8 +165,9 @@ affiliateScore   = min(affiliateRate, 10) / 10 * 5
 
 - 明示CTA: `楽天市場で詳細を見る`
 - `ポイントN倍` バッジ（`pointRate >= 2` の場合）
-- `送料無料` バッジ（`postageFlag === 1` の場合）
+- `送料無料` バッジ（楽天API出力の `postageFlag === 0`、送料込みの場合）
 - 既存の価格、割引、レビュー表示
+- アフィリエイト商品リンクの `rel` は `sponsored noopener noreferrer`
 
 アフィリエイト料率はユーザーの購入判断に不要なため表示しない。
 
@@ -191,7 +193,22 @@ affiliateScore   = min(affiliateRate, 10) / 10 * 5
 
 ### 8.1 ブラウザイベント
 
-商品クリック時に既存のGA4推奨イベント `select_item` を維持し、独自イベント `affiliate_click` も送る。
+商品クリック時に既存のGA4推奨イベント `select_item` を維持し、独自イベント `affiliate_click` も送る。両イベントは別の純粋関数で生成し、GA4標準イベントでは item scope の `item_list_name` と `price` を使う。
+
+```ts
+gtag('event', 'select_item', {
+  items: [{
+    item_id: product.id,
+    item_name: product.name,
+    item_category: product.category,
+    item_list_name: listName,
+    index: position,
+    price: product.price,
+  }],
+  value: product.price,
+  currency: 'JPY',
+});
+```
 
 ```ts
 gtag('event', 'affiliate_click', {
@@ -207,7 +224,7 @@ gtag('event', 'affiliate_click', {
 
 `ProductCard` は `listName` と `position` を任意propsで受ける。未指定でもイベント送信は行い、既存呼び出しとの互換性を保つ。リンクは引き続き新しいタブで開くため、イベント送信が画面遷移で中断されにくい。
 
-イベントオブジェクト生成は `lib/analytics.ts` の純粋関数へ分離し、認証情報や完全なアフィリエイトURLをイベントへ含めない。
+イベントオブジェクト生成は `lib/analytics.ts` の2つの純粋関数へ分離し、認証情報や完全なアフィリエイトURLをイベントへ含めない。独自 `affiliate_click` payloadの `list_name` と `value` は履歴互換のため変更しない。
 
 ### 8.2 日次データ
 
@@ -250,6 +267,8 @@ gtag('event', 'affiliate_click', {
 4. 各選択肢の直後にキーワードが一致する商品欄
 5. 買う前の注意点
 6. 最終CTAと関連カテゴリへの内部リンク
+
+商品へ正直に対応できない制度説明や注意事項は選択肢の列挙へ混ぜず、独立した情報セクションとして記載する。
 
 優先順位は次のとおり。
 

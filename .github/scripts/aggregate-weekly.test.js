@@ -29,3 +29,44 @@ test('formats zero-session affiliate CTR without NaN or Infinity', () => {
   assert.match(report, /楽天クリック率 \| 0\.0%/);
   assert.doesNotMatch(report, /NaN|Infinity/);
 });
+
+test('combines repeated affiliate paths across days before selecting the weekly top 10', () => {
+  const firstDay = Array.from({ length: 11 }, (_, index) => ({
+    page: `/page-${index + 1}`,
+    clicks: 12 - index,
+  }));
+  const secondDay = [
+    { page: '/page-11', clicks: 20 },
+    { page: '/page-12', clicks: 1 },
+  ];
+  const result = aggregateGA4([
+    {
+      ga4: {
+        sessions: 20,
+        users: 10,
+        pageviews: 30,
+        topPages: [],
+        sources: [],
+        affiliateClicks: 66,
+        affiliateClickPages: firstDay,
+      },
+    },
+    {
+      ga4: {
+        sessions: 10,
+        users: 8,
+        pageviews: 15,
+        topPages: [],
+        sources: [],
+        affiliateClicks: 21,
+        affiliateClickPages: secondDay,
+      },
+    },
+  ]);
+
+  assert.equal(result.affiliateClickPages.length, 10);
+  assert.deepEqual(result.affiliateClickPages[0], ['/page-11', 22]);
+  assert.deepEqual(result.affiliateClickPages.at(-1), ['/page-9', 4]);
+  assert.equal(result.affiliateClickPages.some(([page]) => page === '/page-10'), false);
+  assert.equal(result.affiliateClickPages.some(([page]) => page === '/page-12'), false);
+});

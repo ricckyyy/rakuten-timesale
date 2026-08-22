@@ -46,7 +46,7 @@
 
 ```ts
 pointRate: 5,
-postageFlag: 1,
+postageFlag: 0,
 affiliateRate: 4.5,
 ```
 
@@ -54,7 +54,7 @@ affiliateRate: 4.5,
 
 ```ts
 pointRate: 5,
-postageFlag: 1,
+postageFlag: 0,
 affiliateRate: 4.5,
 ```
 
@@ -126,7 +126,7 @@ test('ranks user value above affiliate rate alone', () => {
     reviewCount: 1000,
     discount: 30,
     pointRate: 5,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 1,
   });
   const highCommission = product('commission', { affiliateRate: 10 });
@@ -148,7 +148,7 @@ test('caps each scoring component', () => {
     reviewCount: 1_000_000,
     discount: 100,
     pointRate: 50,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 99,
   }));
   assert.equal(score, 100);
@@ -180,7 +180,7 @@ export function scoreProduct(product: Product): number {
   const pointScore = (product.pointRate ?? 0) > 1
     ? clamp(product.pointRate ?? 0, 0, 10) / 10 * 10
     : 0;
-  const postageScore = product.postageFlag === 1 ? 10 : 0;
+  const postageScore = product.postageFlag === 0 ? 10 : 0;
   const affiliateScore = clamp(product.affiliateRate ?? 0, 0, 10) / 10 * 5;
   return reviewCountScore + ratingScore + discountScore + pointScore
     + postageScore + affiliateScore;
@@ -376,6 +376,7 @@ git commit -m "feat: 購入意図に合わせて楽天商品を取得"
 **Interfaces:**
 - Consumes: Task 1の追加商品フィールド。
 - Produces: `buildAffiliateClickEvent(product, listName, position): AffiliateClickEvent`。
+- Produces: `buildSelectItemEvent(product, listName, position): SelectItemEvent`。
 - Produces: `getProductBadges(product: Product): string[]`。
 - Produces: `<AffiliateDisclosure className?: string />`。
 - Extends: `<ProductCard product listName? position? />`。
@@ -387,7 +388,7 @@ git commit -m "feat: 購入意図に合わせて楽天商品を取得"
 ```ts
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildAffiliateClickEvent } from './analytics';
+import { buildAffiliateClickEvent, buildSelectItemEvent } from './analytics';
 
 test('builds an affiliate click event without URLs or credentials', () => {
   const event = buildAffiliateClickEvent({
@@ -410,6 +411,30 @@ test('builds an affiliate click event without URLs or credentials', () => {
   });
   assert.doesNotMatch(JSON.stringify(event), /hb\.afl|secret-query/);
 });
+
+test('builds a standard GA4 select_item event', () => {
+  const event = buildSelectItemEvent({
+    id: 'shop:item',
+    name: '美容液',
+    price: 1980,
+    imageUrl: 'https://example.com/image.jpg',
+    affiliateUrl: 'https://hb.afl.rakuten.co.jp/secret-query',
+    category: 'beauty',
+  }, 'beauty-products', 2);
+
+  assert.deepEqual(event, {
+    items: [{
+      item_id: 'shop:item',
+      item_name: '美容液',
+      item_category: 'beauty',
+      item_list_name: 'beauty-products',
+      index: 2,
+      price: 1980,
+    }],
+    value: 1980,
+    currency: 'JPY',
+  });
+});
 ```
 
 - [x] **Step 2: バッジ判定の失敗テストを書く**
@@ -420,7 +445,7 @@ test('builds an affiliate click event without URLs or credentials', () => {
 test('returns only user-facing purchase benefit badges', () => {
   const badges = getProductBadges(product({
     pointRate: 5,
-    postageFlag: 1,
+    postageFlag: 0,
     affiliateRate: 10,
   }));
   assert.deepEqual(badges, ['ポイント5倍', '送料無料']);
@@ -456,6 +481,19 @@ export interface AffiliateClickEvent {
   currency: 'JPY';
 }
 
+export interface SelectItemEvent {
+  items: [{
+    item_id: string;
+    item_name: string;
+    item_category: string;
+    item_list_name: string;
+    index: number;
+    price: number;
+  }];
+  value: number;
+  currency: 'JPY';
+}
+
 export function buildAffiliateClickEvent(
   product: Product,
   listName = 'products',
@@ -471,6 +509,25 @@ export function buildAffiliateClickEvent(
     currency: 'JPY',
   };
 }
+
+export function buildSelectItemEvent(
+  product: Product,
+  listName = 'products',
+  position = 0,
+): SelectItemEvent {
+  return {
+    items: [{
+      item_id: product.id,
+      item_name: product.name,
+      item_category: product.category,
+      item_list_name: listName,
+      index: position,
+      price: product.price,
+    }],
+    value: product.price,
+    currency: 'JPY',
+  };
+}
 ```
 
 `lib/product-display.ts`:
@@ -481,7 +538,7 @@ import type { Product } from './types';
 export function getProductBadges(product: Product): string[] {
   const badges: string[] = [];
   if ((product.pointRate ?? 0) >= 2) badges.push(`ポイント${product.pointRate}倍`);
-  if (product.postageFlag === 1) badges.push('送料無料');
+  if (product.postageFlag === 0) badges.push('送料無料');
   return badges;
 }
 ```
@@ -519,21 +576,24 @@ interface ProductCardProps {
 }
 ```
 
-クリック時に同じevent payloadで2イベントを送る。
+クリック時にGA4標準payloadとプライバシー安全な独自payloadを別々に生成して送る。
 
 ```ts
-const event = buildAffiliateClickEvent(product, listName, position);
-w.gtag?.('event', 'select_item', { items: [event], value: product.price, currency: 'JPY' });
-w.gtag?.('event', 'affiliate_click', event);
+const selectItemEvent = buildSelectItemEvent(product, listName, position);
+const affiliateEvent = buildAffiliateClickEvent(product, listName, position);
+w.gtag?.('event', 'select_item', selectItemEvent);
+w.gtag?.('event', 'affiliate_click', affiliateEvent);
 ```
 
 `gtag` がない場合も既存イベントを失わないよう、同じpayloadで次の2件を順にpushする。
 
 ```ts
 w.dataLayer ??= [];
-w.dataLayer.push({ event: 'select_item', items: [event], value: product.price, currency: 'JPY' });
-w.dataLayer.push({ event: 'affiliate_click', ...event });
+w.dataLayer.push({ event: 'select_item', ...selectItemEvent });
+w.dataLayer.push({ event: 'affiliate_click', ...affiliateEvent });
 ```
+
+商品リンクは `rel="sponsored noopener noreferrer"` とする。
 
 カード本文へ `getProductBadges(product)` のバッジと、次のCTAを追加する。
 

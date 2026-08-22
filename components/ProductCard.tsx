@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/rakuten';
-import { buildAffiliateClickEvent } from '@/lib/analytics';
+import { buildAffiliateClickEvent, buildSelectItemEvent } from '@/lib/analytics';
 import { getProductBadges } from '@/lib/product-display';
 import CountdownTimer from './CountdownTimer';
 
@@ -30,25 +30,20 @@ export default function ProductCard({
       gtag?: (...args: unknown[]) => void;
       dataLayer?: Array<Record<string, unknown>>;
     };
-    const event = buildAffiliateClickEvent(product, listName, position);
+    const affiliateEvent = buildAffiliateClickEvent(product, listName, position);
+    const selectItemEvent = buildSelectItemEvent(product, listName, position);
 
     try {
       if (typeof w.gtag === 'function') {
-        w.gtag('event', 'select_item', {
-          items: [event],
-          value: product.price,
-          currency: 'JPY',
-        });
-        w.gtag('event', 'affiliate_click', event);
+        w.gtag('event', 'select_item', selectItemEvent);
+        w.gtag('event', 'affiliate_click', affiliateEvent);
       } else {
         w.dataLayer ??= [];
         w.dataLayer.push({
           event: 'select_item',
-          items: [event],
-          value: product.price,
-          currency: 'JPY',
+          ...selectItemEvent,
         });
-        w.dataLayer.push({ event: 'affiliate_click', ...event });
+        w.dataLayer.push({ event: 'affiliate_click', ...affiliateEvent });
       }
     } catch {
       // fail silently
@@ -59,7 +54,7 @@ export default function ProductCard({
     <a
       href={product.affiliateUrl}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="sponsored noopener noreferrer"
       onClick={handleClick}
       className="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
     >

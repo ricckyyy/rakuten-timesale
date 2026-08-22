@@ -158,9 +158,12 @@ export default async function Home() {
                     </span>
                   )}
                 </div>
-                <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-3 block text-sm font-medium text-red-600 dark:text-red-400 hover:underline"
+                >
                   {post.cta ?? '記事を読む'}
-                </p>
+                </Link>
               </article>
             ))}
           </div>
