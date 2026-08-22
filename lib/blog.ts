@@ -59,8 +59,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
   return parsePost(slug, raw);
 }
 
-export function getFeaturedPosts(limit = 3): BlogPost[] {
-  const all = getAllPosts();
+export function selectFeaturedPosts(all: BlogPost[], limit = 3): BlogPost[] {
   const bySlug = new Map(all.map((post) => [post.slug, post]));
   const featured = FEATURED_POST_SLUGS
     .map((slug) => bySlug.get(slug))
@@ -68,6 +67,10 @@ export function getFeaturedPosts(limit = 3): BlogPost[] {
   const featuredSet = new Set(featured.map((post) => post.slug));
 
   return [...featured, ...all.filter((post) => !featuredSet.has(post.slug))].slice(0, limit);
+}
+
+export function getFeaturedPosts(limit = 3): BlogPost[] {
+  return selectFeaturedPosts(getAllPosts(), limit);
 }
 
 export function getRelatedPosts(current: BlogPost, limit = 3): BlogPost[] {
