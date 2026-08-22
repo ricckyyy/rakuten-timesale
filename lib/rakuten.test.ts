@@ -47,6 +47,9 @@ test('fetches and transforms products through the supported API version', { conc
             itemPrice: 1980,
             itemUrl: 'https://item.rakuten.co.jp/shop/item-1/',
             affiliateUrl: 'https://hb.afl.rakuten.co.jp/example',
+            pointRate: 5,
+            postageFlag: 1,
+            affiliateRate: 4.5,
             mediumImageUrls: [{ imageUrl: 'https://example.com/image_ex=128x128.jpg' }],
             reviewAverage: 4.5,
             reviewCount: 10,
@@ -69,6 +72,44 @@ test('fetches and transforms products through the supported API version', { conc
       category: '558885',
       rating: 4.5,
       reviewCount: 10,
+      pointRate: 5,
+      postageFlag: 1,
+      affiliateRate: 4.5,
+    },
+  ]);
+});
+
+test('transforms products when optional commerce fields are omitted', { concurrency: false }, async () => {
+  globalThis.fetch = async () =>
+    jsonResponse({
+      Items: [
+        {
+          Item: {
+            itemCode: 'shop:item-optional',
+            itemName: 'オプション省略商品',
+            itemPrice: 1000,
+            itemUrl: 'https://item.rakuten.co.jp/shop/item-optional/',
+          },
+        },
+      ],
+    });
+
+  const products = await fetchRakutenProducts('558885', undefined, 1);
+
+  assert.deepEqual(products, [
+    {
+      id: 'shop:item-optional',
+      name: 'オプション省略商品',
+      price: 1000,
+      discount: undefined,
+      imageUrl: '',
+      affiliateUrl: 'https://item.rakuten.co.jp/shop/item-optional/',
+      category: '558885',
+      rating: undefined,
+      reviewCount: undefined,
+      pointRate: undefined,
+      postageFlag: undefined,
+      affiliateRate: undefined,
     },
   ]);
 });

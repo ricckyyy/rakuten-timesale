@@ -125,6 +125,9 @@ export async function fetchRakutenProducts(
       category: genreId || 'all',
       rating: product.reviewAverage,
       reviewCount: product.reviewCount,
+      pointRate: product.pointRate,
+      postageFlag: product.postageFlag,
+      affiliateRate: product.affiliateRate,
     };
   });
 
