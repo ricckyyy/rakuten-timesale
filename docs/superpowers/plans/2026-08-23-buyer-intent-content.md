@@ -36,7 +36,7 @@
 - Produces: `FEATURED_POST_SLUGS: readonly string[]`。
 - Produces: `getFeaturedPosts(limit?: number): BlogPost[]`。
 
-- [ ] **Step 1: frontmatter CTA解析の失敗テストを書く**
+- [x] **Step 1: frontmatter CTA解析の失敗テストを書く**
 
 `lib/blog.test.ts` を作成する。実ファイルへ依存しない解析テストのため、`parsePost` をexportする。
 
@@ -67,13 +67,13 @@ test('selects revenue-priority posts before recent fallback posts', () => {
 });
 ```
 
-- [ ] **Step 2: blogテストを実行してREDを確認する**
+- [x] **Step 2: blogテストを実行してREDを確認する**
 
 Run: `npx tsx --test lib/blog.test.ts`
 
 Expected: `parsePost`/`getFeaturedPosts`未exportでFAIL。
 
-- [ ] **Step 3: CTA解析と優先記事関数を実装する**
+- [x] **Step 3: CTA解析と優先記事関数を実装する**
 
 `lib/blog.ts` を次の形へ拡張する。
 
@@ -105,17 +105,17 @@ export function getFeaturedPosts(limit = 3): BlogPost[] {
 }
 ```
 
-- [ ] **Step 4: トップを優先記事関数へ移行する**
+- [x] **Step 4: トップを優先記事関数へ移行する**
 
 `app/page.tsx` の `getAllPosts().slice(0, 3)` を `getFeaturedPosts(3)` に変更する。記事リンク文は見出しのまま、カード末尾へ `post.cta ?? '記事を読む'` を赤字で表示する。
 
-- [ ] **Step 5: blogテストとbuildを実行してGREENを確認する**
+- [x] **Step 5: blogテストとbuildを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/blog.test.ts && npm run build`
 
 Expected: テストPASS、build成功。
 
-- [ ] **Step 6: Task 1をコミットする**
+- [x] **Step 6: Task 1をコミットする**
 
 ```bash
 git add lib/blog.ts lib/blog.test.ts app/page.tsx
@@ -136,7 +136,7 @@ git commit -m "feat: 収益優先の記事導線を追加"
 - Consumes: Task 1の `BlogPost.cta`。
 - Produces: 優先3記事の `updated`、`cta`、結論、注意点、カテゴリCTA、セール記事間リンク。
 
-- [ ] **Step 1: 優先記事構造の失敗テストを書く**
+- [x] **Step 1: 優先記事構造の失敗テストを書く**
 
 `lib/blog-content.test.ts` を作成する。
 
@@ -173,13 +173,13 @@ test('sale event guides cross-link each other', () => {
 });
 ```
 
-- [ ] **Step 2: 優先記事テストを実行してREDを確認する**
+- [x] **Step 2: 優先記事テストを実行してREDを確認する**
 
 Run: `npx tsx --test lib/blog-content.test.ts`
 
 Expected: `updated`、`cta`、見出し不足でFAIL。
 
-- [ ] **Step 3: 美容液記事を更新する**
+- [x] **Step 3: 美容液記事を更新する**
 
 frontmatterへ追加する。
 
@@ -210,7 +210,7 @@ cta: "肌悩み別にプチプラ美容液を選ぶ"
 [楽天市場の美容・コスメセール商品を見る](/category/beauty)
 ```
 
-- [ ] **Step 4: セールカレンダー記事を更新する**
+- [x] **Step 4: セールカレンダー記事を更新する**
 
 frontmatterへ追加する。
 
@@ -243,7 +243,7 @@ cta: "次の楽天セールと買い時を確認する"
 - [現在の楽天セール商品を見る](/category/beauty)
 ```
 
-- [ ] **Step 5: スーパーSALE記事を更新する**
+- [x] **Step 5: スーパーSALE記事を更新する**
 
 frontmatterへ追加する。
 
@@ -276,13 +276,13 @@ cta: "スーパーSALEで買う商品を決める"
 - [現在の家電セール商品を見る](/category/electronics)
 ```
 
-- [ ] **Step 6: 優先記事テストとbuildを実行してGREENを確認する**
+- [x] **Step 6: 優先記事テストとbuildを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/blog-content.test.ts && npm run build`
 
 Expected: 優先記事2テストPASS、MDX build成功。
 
-- [ ] **Step 7: Task 2をコミットする**
+- [x] **Step 7: Task 2をコミットする**
 
 ```bash
 git add lib/blog-content.test.ts content/blog/drugstore-serum-picks.mdx content/blog/rakuten-sale-calendar-2026.mdx content/blog/rakuten-super-sale-guide.mdx
@@ -304,7 +304,7 @@ git commit -m "content: 美容と大型セール記事の購入導線を強化"
 **Interfaces:**
 - Produces: 残り5記事の `updated`、`cta`、結論、注意点、カテゴリCTA。
 
-- [ ] **Step 1: 残り記事構造の失敗テストを書く**
+- [x] **Step 1: 残り記事構造の失敗テストを書く**
 
 `lib/blog-content.test.ts` へ追加する。
 
@@ -336,13 +336,13 @@ test('shopping marathon links to the other sale guides', () => {
 });
 ```
 
-- [ ] **Step 2: 残り記事テストを実行してREDを確認する**
+- [x] **Step 2: 残り記事テストを実行してREDを確認する**
 
 Run: `npx tsx --test --test-name-pattern='remaining|shopping marathon' lib/blog-content.test.ts`
 
 Expected: 5記事の構造不足でFAIL。
 
-- [ ] **Step 3: お買い物マラソン記事を更新する**
+- [x] **Step 3: お買い物マラソン記事を更新する**
 
 frontmatter:
 
@@ -373,7 +373,7 @@ cta: "買い回り前の購入リストを作る"
 - [現在の食品セール商品を見る](/category/food)
 ```
 
-- [ ] **Step 4: コードレス掃除機記事を更新する**
+- [x] **Step 4: コードレス掃除機記事を更新する**
 
 frontmatter:
 
@@ -402,7 +402,7 @@ cta: "住まいに合うコードレス掃除機を比較する"
 [楽天市場の家電セール商品を見る](/category/electronics)
 ```
 
-- [ ] **Step 5: 食品保存容器記事を更新する**
+- [x] **Step 5: 食品保存容器記事を更新する**
 
 frontmatter:
 
@@ -431,7 +431,7 @@ cta: "用途別に食品保存容器を選ぶ"
 [楽天市場の食品・グルメセール商品を見る](/category/food)
 ```
 
-- [ ] **Step 6: タンブラー記事を更新する**
+- [x] **Step 6: タンブラー記事を更新する**
 
 frontmatter:
 
@@ -460,7 +460,7 @@ cta: "用途に合う保温タンブラーを比較する"
 [楽天市場のスポーツ・アウトドアセール商品を見る](/category/sports)
 ```
 
-- [ ] **Step 7: 楽天ポイント記事を更新する**
+- [x] **Step 7: 楽天ポイント記事を更新する**
 
 frontmatter:
 
@@ -489,13 +489,13 @@ SPUやキャンペーンの倍率、上限、対象サービスは変更され�
 [現在の楽天セール商品を見る](/category/food)
 ```
 
-- [ ] **Step 8: 残り記事テストとbuildを実行してGREENを確認する**
+- [x] **Step 8: 残り記事テストとbuildを実行してGREENを確認する**
 
 Run: `npx tsx --test lib/blog-content.test.ts && npm run build`
 
 Expected: 全記事構造テストPASS、MDX build成功。
 
-- [ ] **Step 9: Task 3をコミットする**
+- [x] **Step 9: Task 3をコミットする**
 
 ```bash
 git add lib/blog-content.test.ts content/blog/rakuten-shopping-marathon-guide.mdx content/blog/cordless-vacuum-picks.mdx content/blog/food-storage-containers-recommended.mdx content/blog/thermal-tumbler-recommended.mdx content/blog/rakuten-point-how-to-earn.mdx
@@ -516,7 +516,7 @@ git commit -m "content: 既存ガイドの購入判断とCTAを強化"
 - Produces: カテゴリから記事への購入意図リンク。
 - Produces: 2026-08-23のゼロ予算収益化ベースライン記録。
 
-- [ ] **Step 1: CTA使用の失敗テストを書く**
+- [x] **Step 1: CTA使用の失敗テストを書く**
 
 `lib/blog-content.test.ts` へ追加する。
 
@@ -532,7 +532,7 @@ Run: `npx tsx --test --test-name-pattern='category-link CTA' lib/blog-content.te
 
 Expected: `cta`を追加していない記事があればFAIL。全8記事済みならPASSし、次stepで利用側を変更する。
 
-- [ ] **Step 2: カテゴリ記事リンクでCTAを使用する**
+- [x] **Step 2: カテゴリ記事リンクでCTAを使用する**
 
 `app/category/[slug]/page.tsx` の関連記事リンク本文を次へ変更する。
 
@@ -543,7 +543,7 @@ Expected: `cta`を追加していない記事があればFAIL。全8記事済み
 <p className="text-sm ...">{post.description}</p>
 ```
 
-- [ ] **Step 3: ロードマップへベースラインと再投資ルールを記録する**
+- [x] **Step 3: ロードマップへベースラインと再投資ルールを記録する**
 
 `GROWTH_ROADMAP.md` にチェック項目を追加する。
 
@@ -558,7 +558,7 @@ Expected: `cta`を追加していない記事があればFAIL。全8記事済み
 | 2026-08-23 | 11（08-13〜08-19） | 10.1 | 0 | - | 初期投資0円・SNSなしの収益化改善を実施。ベースラインはGSC表示11、クリック0、GA4セッション1、売上0。楽天クリック計測、購入意図ランキング、商品CTA、広告開示、既存8記事の結論・注意点・内部リンクを追加。30日後に表示、検索クリック、オーガニックセッション、楽天クリック、成果報酬を再評価する。初売上確定後は70%を改善へ再投資し、30%を予備費とする |
 ```
 
-- [ ] **Step 4: Task 4をコミットする**
+- [x] **Step 4: Task 4をコミットする**
 
 ```bash
 git add 'app/category/[slug]/page.tsx' lib/blog-content.test.ts GROWTH_ROADMAP.md
