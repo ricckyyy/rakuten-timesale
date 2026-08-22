@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { fetchRakutenProducts } from '@/lib/rakuten';
+import { fetchBuyerIntentProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
 import { getAllPosts } from '@/lib/blog';
 import { CATEGORIES, CATEGORY_FAQ, SITE_INFO } from '@/lib/constants';
@@ -69,7 +69,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   // カテゴリIDで商品を取得
-  const products = await fetchRakutenProducts(category.genreId);
+  const products = await fetchBuyerIntentProducts({
+    genreId: category.genreId,
+    keyword: 'セール',
+    hits: 30,
+  });
 
   // このカテゴリに関連するブログ記事を取得
   const relatedPosts = getAllPosts().filter((p) => p.category === slug);

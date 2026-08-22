@@ -1,4 +1,4 @@
-import { fetchRakutenProducts } from '@/lib/rakuten';
+import { fetchBuyerIntentProducts } from '@/lib/rakuten';
 import SortableProductGrid from '@/components/SortableProductGrid';
 import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
 import { getAllPosts } from '@/lib/blog';
@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）
-  const products = await fetchRakutenProducts(undefined, 'セール', 30);
+  const products = await fetchBuyerIntentProducts({ keyword: 'セール', hits: 30 });
   const recentPosts = getAllPosts().slice(0, 3);
 
   const today = new Date().toLocaleDateString('ja-JP', {

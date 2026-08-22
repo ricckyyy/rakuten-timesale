@@ -1,4 +1,4 @@
-import { fetchOptionalRakutenProducts } from '@/lib/rakuten';
+import { fetchOptionalBuyerIntentProducts } from '@/lib/rakuten';
 import ProductCard from './ProductCard';
 
 interface ProductSectionProps {
@@ -7,7 +7,7 @@ interface ProductSectionProps {
 }
 
 export default async function ProductSection({ keyword, hits = 4 }: ProductSectionProps) {
-  const products = await fetchOptionalRakutenProducts(undefined, keyword, hits);
+  const products = await fetchOptionalBuyerIntentProducts({ keyword, hits });
 
   if (products.length === 0) return null;
 

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/blog';
-import { fetchOptionalRakutenProducts } from '@/lib/rakuten';
+import { fetchOptionalBuyerIntentProducts } from '@/lib/rakuten';
 import { CATEGORIES, SITE_INFO } from '@/lib/constants';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
@@ -69,7 +69,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // 記事のtagsをキーワードにして関連商品を取得
   const keyword = post.tags[0] ?? post.title;
-  const relatedProducts = await fetchOptionalRakutenProducts(undefined, keyword, 4);
+  const relatedProducts = await fetchOptionalBuyerIntentProducts({ keyword, hits: 4 });
   const relatedPosts = getRelatedPosts(post, 3);
 
   const url = `${SITE_INFO.url}/blog/${slug}`;

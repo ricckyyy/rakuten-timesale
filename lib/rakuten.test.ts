@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, test } from 'node:test';
-import { fetchRakutenProducts } from './rakuten';
+import {
+  fetchBuyerIntentProducts,
+  fetchOptionalBuyerIntentProducts,
+  fetchRakutenProducts,
+} from './rakuten';
 import * as rakutenModule from './rakuten';
 
 const originalFetch = globalThis.fetch;
@@ -202,6 +206,75 @@ test('keeps a successful empty result as an empty product array', { concurrency:
   const products = await fetchRakutenProducts('558885');
 
   assert.deepEqual(products, []);
+});
+
+test('fetches buyer-intent products by sale keyword and review count', { concurrency: false }, async () => {
+  const urls: string[] = [];
+  globalThis.fetch = async (input) => {
+    urls.push(String(input));
+    return jsonResponse({ count: 0, pageCount: 0, Items: [] });
+  };
+
+  await fetchBuyerIntentProducts({ genreId: '100939', keyword: 'セール', hits: 30 });
+
+  const first = new URL(urls[0]);
+  assert.equal(first.searchParams.get('genreId'), '100939');
+  assert.equal(first.searchParams.get('keyword'), 'セール');
+  assert.equal(first.searchParams.get('sort'), '-reviewCount');
+});
+
+test('falls back to a genre-only buyer-intent search after an empty keyword result', { concurrency: false }, async () => {
+  const urls: string[] = [];
+  globalThis.fetch = async (input) => {
+    urls.push(String(input));
+    return jsonResponse({ count: 0, pageCount: 0, Items: [] });
+  };
+
+  await fetchBuyerIntentProducts({ genreId: '100939', keyword: 'セール', hits: 30 });
+
+  assert.equal(urls.length, 2);
+  const fallback = new URL(urls[1]);
+  assert.equal(fallback.searchParams.get('genreId'), '100939');
+  assert.equal(fallback.searchParams.get('keyword'), null);
+  assert.equal(fallback.searchParams.get('sort'), '-reviewCount');
+});
+
+test('does not fall back after a buyer-intent API error', { concurrency: false }, async () => {
+  const urls: string[] = [];
+  globalThis.fetch = async (input) => {
+    urls.push(String(input));
+    return jsonResponse({ error: 'bad_gateway' }, 502);
+  };
+
+  await assert.rejects(
+    () => fetchBuyerIntentProducts({ genreId: '100939', keyword: 'セール', hits: 30 }),
+    (error: unknown) => error instanceof rakutenModule.RakutenApiError,
+  );
+  assert.equal(urls.length, 1);
+});
+
+test('does not fall back from a keyword-only buyer-intent search', { concurrency: false }, async () => {
+  const urls: string[] = [];
+  globalThis.fetch = async (input) => {
+    urls.push(String(input));
+    return jsonResponse({ count: 0, pageCount: 0, Items: [] });
+  };
+
+  await fetchBuyerIntentProducts({ keyword: '美容 セール', hits: 4 });
+
+  assert.equal(urls.length, 1);
+  const search = new URL(urls[0]);
+  assert.equal(search.searchParams.get('genreId'), null);
+  assert.equal(search.searchParams.get('keyword'), '美容 セール');
+});
+
+test('allows optional buyer-intent sections to omit products after a RakutenApiError', { concurrency: false }, async () => {
+  delete process.env.RAKUTEN_ACCESS_KEY;
+
+  assert.deepEqual(
+    await fetchOptionalBuyerIntentProducts({ keyword: 'セール' }),
+    [],
+  );
 });
 
 test('retries once after an upstream rate limit response', { concurrency: false }, async () => {

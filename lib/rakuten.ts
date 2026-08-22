@@ -1,9 +1,20 @@
 import { Product, RakutenApiResponse } from './types';
 import { RAKUTEN_API_BASE_URL, ITEMS_PER_PAGE } from './constants';
+import { rankProducts } from './product-ranking';
 
 interface RakutenApiErrorPayload {
   error?: string;
   error_description?: string;
+}
+
+interface RakutenRequestOptions {
+  sort?: 'standard' | '-reviewCount';
+}
+
+export interface BuyerIntentSearchOptions {
+  genreId?: string;
+  keyword: string;
+  hits?: number;
 }
 
 export class RakutenApiError extends Error {
@@ -30,7 +41,8 @@ export class RakutenApiError extends Error {
 export async function fetchRakutenProducts(
   genreId?: string,
   keyword?: string,
-  hits: number = ITEMS_PER_PAGE
+  hits: number = ITEMS_PER_PAGE,
+  requestOptions: RakutenRequestOptions = {},
 ): Promise<Product[]> {
   const appId = process.env.RAKUTEN_APP_ID;
   const accessKey = process.env.RAKUTEN_ACCESS_KEY;
@@ -45,7 +57,7 @@ export async function fetchRakutenProducts(
     applicationId: appId,
     accessKey: accessKey,
     hits: hits.toString(),
-    sort: 'standard',
+    sort: requestOptions.sort ?? 'standard',
     format: 'json',
     ...(affiliateId && { affiliateId }),
   });
@@ -139,6 +151,35 @@ export async function fetchRakutenProducts(
   const unreviewed = products.filter((p) => p.reviewCount !== undefined && p.reviewCount === 0);
 
   return [...reviewed, ...unreviewed];
+}
+
+export async function fetchBuyerIntentProducts({
+  genreId,
+  keyword,
+  hits = ITEMS_PER_PAGE,
+}: BuyerIntentSearchOptions): Promise<Product[]> {
+  let products = await fetchRakutenProducts(genreId, keyword, hits, {
+    sort: '-reviewCount',
+  });
+
+  if (products.length === 0 && genreId) {
+    products = await fetchRakutenProducts(genreId, undefined, hits, {
+      sort: '-reviewCount',
+    });
+  }
+
+  return rankProducts(products);
+}
+
+export async function fetchOptionalBuyerIntentProducts(
+  options: BuyerIntentSearchOptions,
+): Promise<Product[]> {
+  try {
+    return await fetchBuyerIntentProducts(options);
+  } catch (error) {
+    if (error instanceof RakutenApiError) return [];
+    throw error;
+  }
 }
 
 // 関連商品など補助コンテンツ向け。楽天API障害時も本文の表示は継続する。
