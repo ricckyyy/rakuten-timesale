@@ -222,7 +222,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 className="block border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-red-400 dark:hover:border-red-500 hover:shadow-md transition-all"
               >
                 <p className="font-semibold text-gray-800 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 mb-1">
-                  {post.title}
+                  {post.cta ?? post.title} →
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{post.description}</p>
               </Link>

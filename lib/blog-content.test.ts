@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { getPostBySlug } from './blog';
+import { getAllPosts, getPostBySlug } from './blog';
 
 const prioritySlugs = [
   'drugstore-serum-picks',
@@ -46,6 +46,12 @@ test('remaining buyer guides contain decision and CTA sections', () => {
     assert.match(post.content, /## 結論/, slug);
     assert.match(post.content, /## 買う前の注意点/, slug);
     assert.match(post.content, /\]\(\/category\//, slug);
+  }
+});
+
+test('all buyer guides expose a category-link CTA', () => {
+  for (const post of getAllPosts()) {
+    assert.ok(post.cta, post.slug);
   }
 });
 
