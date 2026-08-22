@@ -264,7 +264,7 @@ export const SITE_INFO = {
 };
 
 // 楽天API設定
-export const RAKUTEN_API_BASE_URL = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601';
+export const RAKUTEN_API_BASE_URL = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701';
 
 // 表示件数
 export const ITEMS_PER_PAGE = 30;

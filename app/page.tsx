@@ -4,8 +4,8 @@ import { CATEGORY_LIST, SITE_INFO } from '@/lib/constants';
 import { getAllPosts } from '@/lib/blog';
 import Link from 'next/link';
 
-// ISR設定: 1時間ごとに再生成
-export const revalidate = 3600;
+// 外部APIをビルド時に集中呼び出ししない。商品データ自体はlib/rakuten.tsで1時間キャッシュする。
+export const revalidate = 0;
 
 export default async function Home() {
   // 複数カテゴリから商品を取得（ミックス表示）

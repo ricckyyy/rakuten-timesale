@@ -1,5 +1,6 @@
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+import { REVALIDATION_PATHS } from '@/lib/revalidation';
 
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get('secret');
@@ -8,18 +9,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Invalid secret' }, { status: 401 });
   }
 
-  const paths = [
-    '/',
-    '/category/electronics',
-    '/category/food',
-    '/category/fashion',
-    '/category/beauty',
-    '/category/books',
-  ];
-
-  for (const path of paths) {
+  for (const path of REVALIDATION_PATHS) {
     revalidatePath(path);
   }
 
-  return NextResponse.json({ revalidated: true, paths, date: new Date().toISOString() });
+  return NextResponse.json({
+    revalidated: true,
+    paths: REVALIDATION_PATHS,
+    date: new Date().toISOString(),
+  });
 }
