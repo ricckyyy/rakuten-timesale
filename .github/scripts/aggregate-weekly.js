@@ -59,7 +59,33 @@ function aggregateGA4(records) {
   }
   const sources = [...channelMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
 
-  return { sessions, users, pageviews, topPages, sources, daysIncluded: withGa4.length };
+  const affiliateClicks = withGa4.reduce(
+    (sum, r) => sum + (r.ga4.affiliateClicks || 0),
+    0
+  );
+  const affiliateCtr = sessions > 0 ? affiliateClicks / sessions : 0;
+
+  const affiliatePageMap = new Map();
+  for (const r of withGa4) {
+    for (const p of r.ga4.affiliateClickPages || []) {
+      affiliatePageMap.set(p.page, (affiliatePageMap.get(p.page) || 0) + p.clicks);
+    }
+  }
+  const affiliateClickPages = [...affiliatePageMap.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  return {
+    sessions,
+    users,
+    pageviews,
+    topPages,
+    sources,
+    affiliateClicks,
+    affiliateCtr,
+    affiliateClickPages,
+    daysIncluded: withGa4.length,
+  };
 }
 
 function aggregateGSC(records) {
@@ -118,11 +144,16 @@ function formatReport(ga4, gsc, weekStart, weekEnd, missing) {
   if (ga4) {
     const topPages = ga4.topPages.map(([page, pv]) => `| ${page} | ${pv} |`).join('\n');
     const sources = ga4.sources.map(([ch, s]) => `| ${ch} | ${s} |`).join('\n');
+    const affiliateClickPages = ga4.affiliateClickPages
+      .map(([page, clicks]) => `| ${page} | ${clicks} |`)
+      .join('\n');
     ga4Section = `| 指標 | 値 |
 |------|-----|
 | セッション数 | ${ga4.sessions} |
 | ユーザー数 | ${ga4.users} |
 | ページビュー数 | ${ga4.pageviews} |
+| 楽天クリック数 | ${ga4.affiliateClicks} |
+| 楽天クリック率 | ${(ga4.affiliateCtr * 100).toFixed(1)}% |
 
 ### 人気ページ TOP10
 | ページ | PV |
@@ -132,7 +163,12 @@ ${topPages || '| データなし | - |'}
 ### 流入チャネル
 | チャネル | セッション |
 |----------|-----------|
-${sources || '| データなし | - |'}`;
+${sources || '| データなし | - |'}
+
+### 楽天クリックページ TOP10
+| ページ | クリック数 |
+|--------|------------|
+${affiliateClickPages || '| データなし | - |'}`;
   } else {
     ga4Section = '> ⚠️ この週はGA4データが1日分も取得できませんでした。';
   }
