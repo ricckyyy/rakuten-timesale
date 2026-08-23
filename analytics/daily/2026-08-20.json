@@ -1,0 +1,21 @@
+{
+  "date": "2026-08-20",
+  "fetchedAt": "2026-08-23T03:03:39.637Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 0,
+    "ctr": 0,
+    "position": 0,
+    "topQueries": [],
+    "topPages": []
+  }
+}
