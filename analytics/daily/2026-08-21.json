@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-21",
+  "fetchedAt": "2026-08-24T03:04:03.958Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 7.25,
+    "topQueries": [
+      {
+        "query": "楽天コスメセール",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
