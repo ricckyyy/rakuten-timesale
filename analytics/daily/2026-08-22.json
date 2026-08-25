@@ -1,0 +1,43 @@
+{
+  "date": "2026-08-22",
+  "fetchedAt": "2026-08-25T02:59:31.236Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 5,
+    "ctr": 0,
+    "position": 5.8,
+    "topQueries": [
+      {
+        "query": "楽天 コスメ セール",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天 化粧品 セール",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
