@@ -1,0 +1,41 @@
+{
+  "date": "2026-08-28",
+  "fetchedAt": "2026-08-31T08:13:08.895Z",
+  "ga4": {
+    "sessions": 4,
+    "users": 4,
+    "pageviews": 4,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 4
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 3
+      },
+      {
+        "channel": "Organic Search",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 6,
+    "ctr": 0,
+    "position": 10,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 6
+      }
+    ]
+  }
+}
