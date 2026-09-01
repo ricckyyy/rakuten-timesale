@@ -1,0 +1,32 @@
+{
+  "date": "2026-08-29",
+  "fetchedAt": "2026-09-01T07:23:42.697Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 7.666666666666667,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
