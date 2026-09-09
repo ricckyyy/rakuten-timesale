@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-06",
+  "fetchedAt": "2026-09-09T07:08:33.880Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/category/food",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Organic Search",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 2,
+    "affiliateClickPages": [
+      {
+        "page": "/category/food",
+        "clicks": 2
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 6,
+    "ctr": 0,
+    "position": 5.5,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 5
+      }
+    ]
+  }
+}
