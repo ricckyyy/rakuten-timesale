@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-07",
+  "fetchedAt": "2026-09-10T07:05:01.795Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 12.5,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
