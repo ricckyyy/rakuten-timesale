@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-08",
+  "fetchedAt": "2026-09-11T07:04:20.785Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 10.5,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/blog/cordless-vacuum-picks",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/books",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
