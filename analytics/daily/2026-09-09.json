@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-09",
+  "fetchedAt": "2026-09-12T06:57:01.233Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Organic Search",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 1,
+    "impressions": 6,
+    "ctr": 0.16666666666666666,
+    "position": 8,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/",
+        "clicks": 1,
+        "impressions": 3
+      },
+      {
+        "page": "/blog/cordless-vacuum-picks",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
