@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-14",
+  "fetchedAt": "2026-09-17T07:16:13.570Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 26.5,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
