@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-15",
+  "fetchedAt": "2026-09-18T07:08:42.297Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 10,
+    "topQueries": [
+      {
+        "query": "site:vercel.app \"キャンペーン\" \"獲得\" -site:amazon.co.jp -site:amazon.com -site:amazonaws.com -site:aboutamazon.jp -site:primevideo.com",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "site:vercel.app \"ギフトカード\" \"プレゼント\" -site:amazon.co.jp -site:amazon.com -site:amazonaws.com -site:aboutamazon.jp -site:primevideo.com",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 4
+      }
+    ]
+  }
+}
