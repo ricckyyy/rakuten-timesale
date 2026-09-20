@@ -1,0 +1,43 @@
+{
+  "date": "2026-09-17",
+  "fetchedAt": "2026-09-20T07:31:37.316Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 8.333333333333332,
+    "topQueries": [
+      {
+        "query": "site:vercel.app \"キャンペーン\" \"獲得\" -site:amazon.co.jp -site:amazon.com -site:amazonaws.com -site:aboutamazon.jp -site:primevideo.com",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "site:vercel.app \"ギフトカード\" \"獲得\" -site:amazon.co.jp -site:amazon.com -site:amazonaws.com -site:aboutamazon.jp -site:primevideo.com",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/books",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
