@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-25",
+  "fetchedAt": "2026-09-28T08:20:37.598Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 51,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
