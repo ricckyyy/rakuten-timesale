@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-02",
+  "fetchedAt": "2026-10-05T08:31:13.670Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 25.75,
+    "topQueries": [
+      {
+        "query": "スキンケア セール",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/books",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
