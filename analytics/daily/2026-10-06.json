@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-06",
+  "fetchedAt": "2026-10-09T03:09:16.799Z",
+  "ga4": {
+    "sessions": 2,
+    "users": 2,
+    "pageviews": 2,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 2
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 2
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 8,
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
