@@ -2,6 +2,16 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const { aggregateGA4, formatReport } = require('./aggregate-weekly');
 
+test('reports missing dates without claiming complete weekly coverage', () => {
+  const ga4 = aggregateGA4([{
+    ga4: { sessions: 1, users: 1, pageviews: 1, topPages: [], sources: [], affiliateClicks: 0 },
+  }]);
+  const report = formatReport(ga4, null, '2026-09-30', '2026-10-06', ['2026-10-06']);
+  assert.match(report, /欠落しています.*2026-10-06/);
+  assert.doesNotMatch(report, /日付の重複・欠落のない週次実績/);
+  assert.match(report, /取得済み日次データ/);
+});
+
 test('aggregates affiliate clicks while accepting legacy daily records', () => {
   const records = [
     { ga4: { sessions: 2, users: 2, pageviews: 3, topPages: [], sources: [] } },

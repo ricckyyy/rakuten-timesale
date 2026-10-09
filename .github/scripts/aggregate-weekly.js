@@ -209,7 +209,7 @@ ${topPages || '| データなし | - | - |'}`;
 
   return `# 📊 週次アナリティクスレポート（${weekStart} 〜 ${weekEnd}）
 ${missingNote}
-\`analytics/daily/\`の日次データ7日分を集計した、日付の重複・欠落のない週次実績です。
+対象期間の\`analytics/daily/\`に保存された取得済み日次データを集計した実績です。日付の欠落は上記の警告に表示します。
 
 ## Google Analytics 4
 
