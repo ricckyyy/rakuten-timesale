@@ -5,7 +5,6 @@ import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/rakuten';
 import { buildAffiliateClickEvent, buildSelectItemEvent } from '@/lib/analytics';
 import { getProductBadges } from '@/lib/product-display';
-import CountdownTimer from './CountdownTimer';
 
 interface ProductCardProps {
   product: Product;
@@ -73,17 +72,13 @@ export default function ProductCard({
           </div>
         )}
         {/* 割引率バッジ（画像オーバーレイ） */}
-        <div className="absolute top-2 left-2">
-          {product.discount ? (
+        {product.discount ? (
+          <div className="absolute top-2 left-2">
             <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow">
               {product.discount}% OFF
             </span>
-          ) : (
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow">
-              SALE
-            </span>
-          )}
-        </div>
+          </div>
+        ) : null}
       </div>
       <div className="p-4">
         <h3 className="text-sm font-medium text-gray-800 dark:text-gray-100 mb-2 min-h-[40px]">
@@ -115,7 +110,6 @@ export default function ProductCard({
             )}
           </div>
         )}
-        <CountdownTimer />
         <span className="mt-3 block w-full rounded-md bg-red-600 px-3 py-2 text-center text-sm font-bold text-white">
           楽天市場で詳細を見る
         </span>
