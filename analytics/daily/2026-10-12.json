@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-12",
+  "fetchedAt": "2026-10-15T07:04:33.293Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/category/beauty",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Organic Search",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 2,
+    "impressions": 4,
+    "ctr": 0.5,
+    "position": 10.5,
+    "topQueries": [
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 1,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 1,
+        "impressions": 1
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
