@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-14",
+  "fetchedAt": "2026-10-17T06:40:13.338Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 6,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 3
+      },
+      {
+        "page": "/category/beauty",
+        "pageviews": 2
+      },
+      {
+        "page": "/category/food",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 6,
+    "ctr": 0,
+    "position": 22,
+    "topQueries": [
+      {
+        "query": "楽天ポイント 貯める",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/cordless-vacuum-picks",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/books",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
