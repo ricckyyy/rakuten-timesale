@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-17",
+  "fetchedAt": "2026-10-20T07:15:26.373Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 45.666666666666664,
+    "topQueries": [
+      {
+        "query": "楽天 ポイント 貯め 方",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
