@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-23",
+  "fetchedAt": "2026-10-26T07:29:49.057Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 15,
+    "topQueries": [
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
