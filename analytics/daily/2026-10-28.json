@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-28",
+  "fetchedAt": "2026-10-31T08:04:17.808Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/category/food",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Organic Search",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 1,
+    "impressions": 5,
+    "ctr": 0.2,
+    "position": 33.6,
+    "topQueries": [
+      {
+        "query": "掃除機 買い時",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/category/food",
+        "clicks": 1,
+        "impressions": 3
+      },
+      {
+        "page": "/blog/cordless-vacuum-picks",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
