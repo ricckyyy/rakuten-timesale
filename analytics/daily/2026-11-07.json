@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-07",
+  "fetchedAt": "2026-11-10T09:22:45.127Z",
+  "ga4": {
+    "sessions": 0,
+    "users": 0,
+    "pageviews": 0,
+    "topPages": [],
+    "sources": [],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 5,
+    "ctr": 0,
+    "position": 24,
+    "topQueries": [
+      {
+        "query": "楽天 ポイント 計算方法",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/books",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 2
+      }
+    ]
+  }
+}
