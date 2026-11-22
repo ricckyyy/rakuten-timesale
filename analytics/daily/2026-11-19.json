@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-19",
+  "fetchedAt": "2026-11-22T09:27:05.743Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 17,
+    "ctr": 0,
+    "position": 27.941176470588236,
+    "topQueries": [
+      {
+        "query": "スキンケア セール",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "query": "セール メイク",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "query": "メイク セール",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天 ポイント 計算方法",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天ポイント お得な貯め方",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天ポイント 何円で何ポイント",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天ポイント何円で何ポイント",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 10
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 6
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
