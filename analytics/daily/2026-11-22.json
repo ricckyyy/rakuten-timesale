@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-22",
+  "fetchedAt": "2026-11-25T10:56:43.794Z",
+  "ga4": {
+    "sessions": 1,
+    "users": 1,
+    "pageviews": 1,
+    "topPages": [
+      {
+        "page": "/blog/rakuten-super-sale-guide",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 8,
+    "ctr": 0,
+    "position": 27.75,
+    "topQueries": [
+      {
+        "query": "スキンケア セール",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "query": "セール メイク",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天 ポイント 上限 月",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天ポイント お得な貯め方",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
