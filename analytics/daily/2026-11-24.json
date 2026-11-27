@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-24",
+  "fetchedAt": "2026-11-27T02:12:20.872Z",
+  "ga4": {
+    "sessions": 5,
+    "users": 5,
+    "pageviews": 5,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 2
+      },
+      {
+        "page": "/category/books",
+        "pageviews": 1
+      },
+      {
+        "page": "/category/electronics",
+        "pageviews": 1
+      },
+      {
+        "page": "/category/sports",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 5
+      }
+    ],
+    "affiliateClicks": 0,
+    "affiliateClickPages": []
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 7,
+    "ctr": 0,
+    "position": 26.857142857142858,
+    "topQueries": [
+      {
+        "query": "セール メイク",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "楽天ポイント お得な貯め方",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 5
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
