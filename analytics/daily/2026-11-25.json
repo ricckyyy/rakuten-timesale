@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-25",
+  "fetchedAt": "2026-11-28T02:11:41.657Z",
+  "ga4": {
+    "sessions": 4,
+    "users": 4,
+    "pageviews": 4,
+    "topPages": [
+      {
+        "page": "/",
+        "pageviews": 3
+      },
+      {
+        "page": "/category/food",
+        "pageviews": 1
+      }
+    ],
+    "sources": [
+      {
+        "channel": "Direct",
+        "sessions": 3
+      },
+      {
+        "channel": "AI Assistant",
+        "sessions": 1
+      }
+    ],
+    "affiliateClicks": 1,
+    "affiliateClickPages": [
+      {
+        "page": "/category/food",
+        "clicks": 1
+      }
+    ]
+  },
+  "gsc": {
+    "clicks": 0,
+    "impressions": 17,
+    "ctr": 0,
+    "position": 13.058823529411764,
+    "topQueries": [
+      {
+        "query": "スキンケア セール",
+        "clicks": 0,
+        "impressions": 5
+      },
+      {
+        "query": "セール メイク",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "query": "メイク セール",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "query": "楽天市場ポイントの使い方",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "query": "通販 セール 食品",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ],
+    "topPages": [
+      {
+        "page": "/blog/rakuten-point-how-to-earn",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "page": "/category/beauty",
+        "clicks": 0,
+        "impressions": 13
+      },
+      {
+        "page": "/category/electronics",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "page": "/category/food",
+        "clicks": 0,
+        "impressions": 1
+      }
+    ]
+  }
+}
